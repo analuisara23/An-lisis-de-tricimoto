@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico Tricimoto</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    color-scheme: light;
+    --paper:#F5F7FA;
+    --surface:#FFFFFF;
+    --surface-2:#EDF2F8;
+    --border:#DCE3EC;
+    --ink:#16233D;
+    --ink-2:#4B5768;
+    --ink-3:#7C8798;
+    --navy:#1F3864;
+    --navy-ink:#0F1B33;
+    --accent:#2A78D6;
+    --accent-soft:#E3EEFB;
+    --risk:#C23B3B;
+    --risk-soft:#F7E7E5;
+    --good:#1E7B34;
+    --good-soft:#E4F0E7;
+    --cat-2:#EB6834;
+    --cat-3:#1BAF7A;
+    --cat-4:#EDA100;
+    --cat-otros:#9AA5B4;
+    --shadow: 0 1px 2px rgba(15,27,51,.04), 0 8px 24px -12px rgba(15,27,51,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --paper:#0D1524;
+      --surface:#141F35;
+      --surface-2:#1B2A46;
+      --border:#293A5C;
+      --ink:#E9EDF5;
+      --ink-2:#AEB9CC;
+      --ink-3:#7E8CA3;
+      --navy:#B9CDEC;
+      --navy-ink:#DCE6F6;
+      --accent:#5B9BE0;
+      --accent-soft:#1B2E4C;
+      --risk:#E2725A;
+      --risk-soft:#3A2420;
+      --good:#4CAF6D;
+      --good-soft:#1C3324;
+      --cat-2:#D95926;
+      --cat-3:#199E70;
+      --cat-4:#C98500;
+      --cat-otros:#5B6472;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --paper:#0D1524;
+    --surface:#141F35;
+    --surface-2:#1B2A46;
+    --border:#293A5C;
+    --ink:#E9EDF5;
+    --ink-2:#AEB9CC;
+    --ink-3:#7E8CA3;
+    --navy:#B9CDEC;
+    --navy-ink:#DCE6F6;
+    --accent:#5B9BE0;
+    --accent-soft:#1B2E4C;
+    --risk:#E2725A;
+    --risk-soft:#3A2420;
+    --good:#4CAF6D;
+    --good-soft:#1C3324;
+    --cat-2:#D95926;
+    --cat-3:#199E70;
+    --cat-4:#C98500;
+    --cat-otros:#5B6472;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.disp{
+    font-family:"Archivo", ui-sans-serif, system-ui, sans-serif;
+    text-wrap:balance;
+    color:var(--ink);
+    margin:0;
+  }
+  .mono, .num{
+    font-family:"IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Sans", sans-serif;
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--ink-3);
+  }
+
+  a{color:var(--accent);}
+
+  /* ---------- layout shell ---------- */
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px 64px;}
+
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:var(--navy-ink);
+    background-image: linear-gradient(160deg, var(--navy-ink) 0%, #16233D 100%);
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  :root[data-theme="dark"] .topbar, @media (prefers-color-scheme:dark){ }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:16px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:8px;
+    background: linear-gradient(135deg, var(--accent), #1B4E8C);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-family:"Archivo",sans-serif; font-weight:800; font-size:15px;
+    flex:none;
+  }
+  .brand-text h1{color:#fff; font-size:17px; font-weight:700; letter-spacing:-.01em;}
+  .brand-text p{margin:1px 0 0; color:rgba(255,255,255,.62); font-size:12px;}
+
+  .filterbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .filterbar .flabel{color:rgba(255,255,255,.55); font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;}
+  .segmented{
+    display:flex; gap:2px; padding:3px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:10px;
+    flex-wrap:wrap;
+  }
+  .seg-btn{
+    appearance:none; border:none; cursor:pointer;
+    padding:6px 12px;
+    border-radius:7px;
+    font-family:"IBM Plex Sans", sans-serif;
+    font-size:12.5px; font-weight:600;
+    color:rgba(255,255,255,.72);
+    background:transparent;
+    transition: background .15s ease, color .15s ease;
+  }
+  .seg-btn:hover{color:#fff;}
+  .seg-btn:focus-visible{outline:2px solid #fff; outline-offset:1px;}
+  .seg-btn[aria-pressed="true"]{
+    background:#fff; color:var(--navy-ink);
+  }
+
+  main{padding-top:28px;}
+
+  section{margin-bottom:34px;}
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap;}
+  .section-head h2{font-size:16px; font-weight:700;}
+  .section-note{color:var(--ink-3); font-size:12px; max-width:520px;}
+
+  /* ---------- narrative cards ---------- */
+  .narrative{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:760px){ .narrative{grid-template-columns:1fr;} }
+  .ncard{
+    border-radius:14px; padding:20px 22px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    box-shadow:var(--shadow);
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .ncard .tag{
+    display:inline-flex; align-items:center; gap:7px;
+    width:fit-content;
+    padding:4px 10px 4px 8px; border-radius:999px;
+    font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  }
+  .tag-dot{width:7px; height:7px; border-radius:50%;}
+  .ncard.good .tag{background:var(--good-soft); color:var(--good);}
+  .ncard.good .tag-dot{background:var(--good);}
+  .ncard.risk .tag{background:var(--risk-soft); color:var(--risk);}
+  .ncard.risk .tag-dot{background:var(--risk);}
+  .ncard h3{font-size:16.5px; font-weight:700; margin-top:2px;}
+  .ncard p{margin:0; color:var(--ink-2); font-size:13.2px; line-height:1.55;}
+  .ncard .zstat{margin-top:4px; font-size:12.5px; color:var(--ink-3);}
+  .ncard .zstat b{color:var(--ink); font-weight:600;}
+  .balance-line{
+    grid-column:1 / -1;
+    display:flex; align-items:center; gap:10px;
+    font-size:11.5px; color:var(--ink-3); margin-top:-4px;
+  }
+  .balance-line::before, .balance-line::after{content:""; flex:1; height:1px; background:var(--border);}
+
+  /* ---------- KPI strip ---------- */
+  .kpis{
+    display:grid; grid-template-columns:repeat(5, 1fr); gap:12px;
+  }
+  @media (max-width:900px){ .kpis{grid-template-columns:repeat(2,1fr);} }
+  .kpi{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .kpi .klabel{font-size:11px; color:var(--ink-3); font-weight:600; letter-spacing:.02em;}
+  .kpi .kval{font-size:21px; font-weight:600; color:var(--ink); letter-spacing:-.01em;}
+  .kpi .ksub{font-size:11.5px; color:var(--ink-3);}
+  .kpi .ksub.warn{color:var(--risk);}
+
+  /* ---------- chart panels ---------- */
+  .charts{display:grid; grid-template-columns:1.15fr 1fr; gap:16px; align-items:stretch;}
+  @media (max-width:900px){ .charts{grid-template-columns:1fr;} }
+  .panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px 16px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column;
+  }
+  .panel-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;}
+  .panel-head h3{font-size:14px; font-weight:700;}
+  .panel-head .phint{font-size:11.5px; color:var(--ink-3); margin-top:2px; max-width:340px;}
+  .legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:11.5px; color:var(--ink-2);}
+  .legend .litem{display:flex; align-items:center; gap:6px;}
+  .legend .lswatch{width:10px; height:10px; border-radius:3px; flex:none;}
+  .legend .lline{width:14px; height:2px; border-radius:2px; flex:none;}
+
+  svg text{font-family:"IBM Plex Sans", sans-serif;}
+  .axis-label{font-size:10.5px; fill:var(--ink-3);}
+  .grid-line{stroke:var(--border); stroke-width:1;}
+  .bar-aun{fill:var(--ink-3); opacity:.35;}
+  .bar-aun:hover{opacity:.5;}
+  .seg-label{font-size:10px; font-weight:600; fill:#fff;}
+  .seg-label.dark-fill{fill:var(--ink);}
+  .cat-year{font-size:11px; fill:var(--ink-2); font-weight:600;}
+  .mora-line{fill:none; stroke:var(--risk); stroke-width:2.25; stroke-linecap:round; stroke-linejoin:round;}
+  .mora-dot{fill:var(--risk); stroke:var(--surface); stroke-width:2;}
+  .mora-val{font-size:11px; font-weight:700; fill:var(--risk); font-family:"IBM Plex Mono", monospace;}
+  .aun-val{font-size:10px; fill:var(--ink-3); font-family:"IBM Plex Mono", monospace;}
+
+  .hoverline{stroke:var(--ink-3); stroke-width:1; stroke-dasharray:2 3; opacity:0;}
+  .tooltip{
+    position:absolute; pointer-events:none; z-index:30;
+    background:var(--navy-ink); color:#fff; border-radius:9px;
+    padding:9px 11px; font-size:11.5px; line-height:1.5;
+    box-shadow:0 8px 20px -6px rgba(0,0,0,.4);
+    opacity:0; transform:translate(-50%,-100%); transition:opacity .1s ease;
+    white-space:nowrap;
+  }
+  .tooltip b{font-family:"IBM Plex Mono",monospace;}
+  .chart-holder{position:relative; flex:1; min-height:210px;}
+
+  /* ---------- ticket panel ---------- */
+  .ticket-panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:20px 22px; box-shadow:var(--shadow);
+  }
+  .ticket-top{display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap; margin-bottom:14px;}
+  .ticket-top h3{font-size:15px; font-weight:700;}
+  .fixed-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--surface-2); color:var(--ink-3);
+    border:1px solid var(--border); border-radius:999px;
+    padding:4px 10px; font-size:10.5px; font-weight:600; letter-spacing:.03em; text-transform:uppercase;
+  }
+  .ticket-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  @media (max-width:760px){ .ticket-grid{grid-template-columns:1fr;} }
+  .tchart h4{font-size:12px; font-weight:600; color:var(--ink-2); margin:0 0 10px;}
+  .tbar-row{display:flex; align-items:center; gap:10px; margin-bottom:9px;}
+  .tbar-name{width:76px; flex:none; font-size:12px; font-weight:600; color:var(--ink);}
+  .tbar-track{flex:1; height:16px; border-radius:5px; background:var(--surface-2); position:relative; overflow:hidden;}
+  .tbar-fill{height:100%; border-radius:5px;}
+  .tbar-val{width:92px; flex:none; text-align:right; font-size:12px; color:var(--ink-2);}
+  .ticket-callout{
+    margin-top:16px; padding:12px 14px; border-radius:10px;
+    background:var(--accent-soft); border:1px solid var(--border);
+    font-size:12.5px; color:var(--ink-2); line-height:1.55;
+  }
+  .ticket-callout b{color:var(--ink);}
+
+  /* ---------- strategy cards ---------- */
+  .strategy-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start;}
+  @media (max-width:760px){ .strategy-grid{grid-template-columns:1fr;} }
+  .scard{
+    background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--sbar);
+    border-radius:12px; padding:16px 18px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .scard .spill{
+    display:inline-flex; width:fit-content; align-items:center;
+    padding:3px 9px; border-radius:999px; background:var(--surface-2);
+    font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-3);
+  }
+  .scard h4{font-size:14.5px; font-weight:700; color:var(--ink); margin:2px 0 0;}
+  .scard p{margin:0; font-size:12.8px; color:var(--ink-2); line-height:1.55;}
+
+  /* ---------- indicator table panel ---------- */
+  .indicator-panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px; box-shadow:var(--shadow);
+  }
+  .ind-table{width:100%; border-collapse:collapse;}
+  .ind-table th{
+    text-align:left; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+    color:var(--ink-3); padding:0 10px 8px 0; border-bottom:1px solid var(--border);
+  }
+  .ind-table td{
+    font-size:12.8px; color:var(--ink-2); padding:10px 10px 10px 0;
+    border-bottom:1px solid var(--border); vertical-align:top; line-height:1.5;
+  }
+  .ind-table tr:last-child td{border-bottom:none;}
+  .ind-table td:first-child{font-weight:600; color:var(--ink); width:26%; white-space:nowrap;}
+  .ind-note{margin-top:12px; font-size:11.5px; color:var(--ink-3);}
+
+  footer{
+    border-top:1px solid var(--border); padding-top:16px; margin-top:8px;
+    color:var(--ink-3); font-size:11.5px; line-height:1.6;
+  }
+  footer .fname{color:var(--ink-2); font-weight:600; margin-top:4px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">T</div>
+      <div class="brand-text">
+        <h1>Diagnóstico Tricimoto</h1>
+        <p>Cartera de crédito · evaluación por cosecha · Comercial y Mercado</p>
+      </div>
+    </div>
+    <div class="filterbar">
+      <span class="flabel">Zona</span>
+      <div class="segmented" id="zonaFilter" role="group" aria-label="Filtrar por zona"></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <main>
+
+    <section class="narrative">
+      <div class="ncard good">
+        <span class="tag"><span class="tag-dot"></span>Corrección de dato + transformación en marcha</span>
+        <h3>KING-GS y KING-DP son el mismo tricimoto — y el negocio sigue creciendo de forma sana</h3>
+        <p>Confirmado con el equipo: KING-GS y KING-DP no son dos productos distintos, es el mismo tricimoto que el sistema empezó a recodificar entre junio y noviembre de 2025. Ya unificados, este modelo se mantuvo cerca de la mitad de la venta anual desde 2022 hasta 2025, y en 2026 cede participación por primera vez frente a MC300 (0% en 2024 a 29.3% en 2026) — diversificación real de producto, no solo de zona: cada vez dependemos menos de NORTE, y ORIENTE y OCCIDENTE ganan terreno año tras año de forma natural.</p>
+        <div class="zstat" id="goodZoneStat"></div>
+      </div>
+      <div class="ncard risk">
+        <span class="tag"><span class="tag-dot"></span>Alerta de riesgo identificable</span>
+        <h3>Un grupo puntual de préstamos viejos necesita atención</h3>
+        <p>La mora que vemos junta dos historias distintas: la de los contratos más nuevos, donde un poco de mora temprana es normal mientras maduran; y la de un grupo concreto de 2022-2023 que ya debió terminar de pagarse hace tiempo (su plazo promedio es de ~28 meses) y sigue activo con mora muy alta.</p>
+        <div class="zstat" id="riskZoneStat"></div>
+      </div>
+      <div class="balance-line">Ninguna lectura anula a la otra — ambas conviven con el mismo peso en el diagnóstico</div>
+    </section>
+
+    <section class="kpis" id="kpiStrip" aria-label="Indicadores clave"></section>
+
+    <section class="panel" id="volumenPanel">
+      <div class="panel-head">
+        <div>
+          <h3>Volumen de originación por año</h3>
+          <div class="phint">Cuántos contratos nuevos se hicieron cada año desde el inicio del negocio (2020-2026; 2026 es un año parcial, a agosto).</div>
+        </div>
+      </div>
+      <div class="chart-holder" id="chartVolHolder" style="min-height:150px;">
+        <svg id="chartVol" viewBox="0 0 980 150" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="tooltip" id="ttVol"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="mesPanel">
+      <div class="panel-head">
+        <div>
+          <h3>Estacionalidad mensual de originación</h3>
+          <div class="phint">Contratos nuevos por mes, ene-2023 a ago-2026 — todas las zonas juntas, no cambia con el filtro de arriba (la base mensual por zona es demasiado chica para ser confiable). 2020-2022 se excluyen del gráfico por bajo volumen y un comprador institucional atípico.</div>
+        </div>
+      </div>
+      <div class="chart-holder" id="chartMesHolder" style="min-height:150px;">
+        <svg id="chartMes" viewBox="0 0 980 150" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="tooltip" id="ttMes"></div>
+      </div>
+      <div class="section-note" style="max-width:720px;margin-top:8px;">Con solo 3 años completos de historia, el patrón mes a mes no se repite de forma confiable de un año a otro (correlación de rangos entre años: de 0.47 a -0.39, prácticamente sin relación). La única excepción consistente es <b>febrero</b>, que fue de los 3-4 meses más altos los 3 años; <b>agosto</b> tendió a ser bajo en 2023 y 2024, pero no en 2025. No se recomienda planear campañas o metas asumiendo un mes "siempre alto" o "siempre bajo" — sí conviene volver a revisar este patrón cuando se cierre el año 2026 y 2027.</div>
+    </section>
+
+    <section class="charts">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Mora por cosecha (año de originación)</h3>
+            <div class="phint">Barras: % de la cosecha que sigue activo hoy (cae con normalidad por amortización). Línea: % en mora entre los que siguen activos — la señal de riesgo real.</div>
+          </div>
+        </div>
+        <div class="chart-holder" id="chartCosechaHolder">
+          <svg id="chartCosecha" viewBox="0 0 520 260" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="tooltip" id="ttCosecha"></div>
+        </div>
+        <div class="legend">
+          <div class="litem"><span class="lswatch" style="background:var(--ink-3); opacity:.5"></span>% aún activos</div>
+          <div class="litem"><span class="lline" style="background:var(--risk)"></span>% mora (de activos)</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Mix de modelo por cosecha</h3>
+            <div class="phint">% de contratos originados cada año, por modelo. KING-GS y KING-DP ya aparecen unificados (son el mismo tricimoto, recodificado en el sistema durante 2025) — lo que sí es un modelo genuinamente nuevo ganando terreno es MC300.</div>
+          </div>
+        </div>
+        <div class="chart-holder" id="chartMixHolder">
+          <svg id="chartMix" viewBox="0 0 480 260" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="tooltip" id="ttMix"></div>
+        </div>
+        <div class="legend" id="mixLegend"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="ticket-panel">
+        <div class="ticket-top">
+          <div>
+            <h3>Ojo con esta cifra: el promedio esconde un puñado de contratos grandes</h3>
+            <div class="section-note">KING-GS y KING-DP son el mismo tricimoto (el sistema solo cambió el código a mediados de 2025) — al unirlos, el ticket promedio parece caer fuerte, pero eso lo explica un grupo pequeño de contratos tipo lote/multi-unidad, más frecuentes antes del cambio de código, no el modelo en sí.</div>
+          </div>
+          <span class="fixed-pill">Vista consolidada · no cambia con el filtro de zona</span>
+        </div>
+        <div class="ticket-grid">
+          <div class="tchart">
+            <h4>Total comprometido al origen (L., promedio) — Cuota × Plazo, excluye cliente institucional</h4>
+            <div id="ticketBars"></div>
+          </div>
+          <div class="tchart">
+            <h4>Antigüedad promedio de contratos activos (meses)</h4>
+            <div id="edadBars"></div>
+          </div>
+        </div>
+        <div class="ticket-callout">
+          El promedio de <b>KING-GS/DP</b> (L.433,429) parece muy por encima de MC-200 y MC300, pero la mediana — el contrato típico — es <b>L.159,838</b>, mucho más cerca de los otros dos modelos (L.103,568 y L.101,999). La diferencia la explica un grupo pequeño de contratos grandes: en la etapa "GS" (antes de jun-2025), el 5% de contratos más grandes llegaba hasta L.3.78M; en la etapa "DP" (después), ese mismo 5% tope baja a L.318k. Vale la pena revisar esos contratos grandes tipo lote/flotilla como un segmento aparte — igual que se hizo antes con el cliente institucional de 44 contratos.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Cobertura de tiendas y contexto regional</h2>
+        <div class="section-note">Por qué unas zonas venden menos que otras: primero la explicación interna y verificable (cobertura de canal); después, contexto externo con fuente citada.</div>
+      </div>
+      <div class="ticket-panel">
+        <h3 style="font-size:13.5px;font-weight:700;color:var(--ink);margin:0 0 4px;">1. Cobertura de canal — contratos por tienda, por zona</h3>
+        <div class="section-note" style="max-width:640px;margin-bottom:10px;">OCCIDENTE no vende menos por falta de tiendas — tiene más tiendas que ORIENTE, LITORAL o SUR. Vende menos porque cada tienda produce muy pocos contratos en promedio: la explicación es de productividad de canal, no de cobertura física.</div>
+        <table class="ind-table">
+          <thead><tr><th>Zona</th><th>Tiendas</th><th>Contratos</th><th>Contratos / tienda</th></tr></thead>
+          <tbody>
+            <tr><td>SUR</td><td>7</td><td>794</td><td><b style="color:var(--good)">113.4</b></td></tr>
+            <tr><td>NORTE</td><td>30</td><td>1,586</td><td>52.9</td></tr>
+            <tr><td>LITORAL</td><td>20</td><td>816</td><td>40.8</td></tr>
+            <tr><td>CENTRO</td><td>31</td><td>1,037</td><td>33.5</td></tr>
+            <tr><td>ORIENTE</td><td>19</td><td>447</td><td>23.5</td></tr>
+            <tr><td>OCCIDENTE</td><td>24</td><td>503</td><td><b style="color:var(--risk)">21.0</b></td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="font-size:13.5px;font-weight:700;color:var(--ink);margin:18px 0 4px;">2. Contexto de desarrollo regional (aproximado, con fuente externa)</h3>
+        <div class="section-note" style="max-width:720px;margin-bottom:10px;">Los departamentos que componen cada Zona se infirieron a partir de las ciudades de las tiendas (no es una definición oficial interna — se recomienda confirmarla con el área comercial). El Índice de Desarrollo Humano (IDH) es del Atlas de Desarrollo Humano del PNUD Honduras, dato 2019 — el desglose por departamento más reciente que se encontró; no se encontró una actualización posterior con este nivel de detalle geográfico.</div>
+        <table class="ind-table">
+          <thead><tr><th>Zona</th><th>Departamentos (aprox.)</th><th>IDH promedio aprox.</th></tr></thead>
+          <tbody>
+            <tr><td>LITORAL</td><td>Atlántida, Colón, Islas de la Bahía</td><td><b style="color:var(--good)">0.658</b></td></tr>
+            <tr><td>NORTE</td><td>Cortés, Yoro</td><td>0.651</td></tr>
+            <tr><td>CENTRO</td><td>Fco. Morazán, Comayagua, La Paz, Intibucá</td><td>0.625</td></tr>
+            <tr><td>SUR</td><td>Choluteca, Valle</td><td>0.621</td></tr>
+            <tr><td>ORIENTE</td><td>El Paraíso, Olancho</td><td>0.592</td></tr>
+            <tr><td>OCCIDENTE</td><td>Copán, Lempira, Ocotepeque, Santa Bárbara</td><td><b style="color:var(--risk)">0.567</b></td></tr>
+          </tbody>
+        </table>
+        <div class="ticket-callout" style="margin-top:14px;">
+          OCCIDENTE y ORIENTE combinan el menor IDH promedio <i>y</i> la menor productividad por tienda — un patrón consistente, no una prueba de causalidad. SUR rompe el patrón: IDH medio pero la mayor productividad por tienda de toda la cartera, así que el desarrollo regional no explica todo. La lectura más defendible: OCCIDENTE y ORIENTE son mercados históricamente más chicos y menos desarrollados — no zonas que se estén debilitando, son zonas que apenas se están penetrando (de ahí su crecimiento reciente en participación).
+        </div>
+
+        <h3 style="font-size:13.5px;font-weight:700;color:var(--ink);margin:18px 0 4px;">3. Poder de compra por remesas familiares (BCH, aproximado)</h3>
+        <div class="section-note" style="max-width:720px;margin-bottom:10px;">Fuente: Encuesta Semestral de Remesas Familiares del Banco Central de Honduras (BCH), <a href="https://www.bch.hn/estadisticos/EME/Resultados%20Encuesta%20Semestral%20de%20Remesas%20Familiare/Informe%20Encuesta%20Semestral%20de%20Remesas%20Familiares%20Agosto%202025.pdf" target="_blank" rel="noopener">informe agosto 2025</a> — el más reciente con desglose departamental que se encontró; solo publica los 6 departamentos principales, el resto queda en un bloque "Otros" (26.3%). Un artículo de <a href="https://www.laprensa.hn/portada/remesas-honduras-migrantes-envios-bch-2026-FD31762788" target="_blank" rel="noopener">La Prensa (2026)</a> cita porcentajes distintos para los mismos departamentos (probablemente otra ronda de encuesta) — se usa el informe del BCH como fuente primaria y se trata el dato como aproximado, no exacto.</div>
+        <table class="ind-table">
+          <thead><tr><th>Zona</th><th>Departamentos con remesas reportadas</th><th>Remesas nacionales aprox.</th></tr></thead>
+          <tbody>
+            <tr><td>CENTRO</td><td>Fco. Morazán 23.8%, Comayagua 8.8%</td><td><b style="color:var(--good)">~32.6%</b></td></tr>
+            <tr><td>NORTE</td><td>Cortés 16.2%</td><td>16.2%</td></tr>
+            <tr><td>LITORAL</td><td>Atlántida 9.7%</td><td>9.7%</td></tr>
+            <tr><td>ORIENTE</td><td>Olancho 7.8%</td><td>7.8%</td></tr>
+            <tr><td>SUR</td><td>no aparece entre los 6 principales</td><td><b style="color:var(--risk)">dentro del 26.3% "Otros"</b></td></tr>
+            <tr><td>OCCIDENTE</td><td>no aparece entre los 6 principales</td><td><b style="color:var(--risk)">dentro del 26.3% "Otros"</b></td></tr>
+          </tbody>
+        </table>
+        <div class="ticket-callout" style="margin-top:14px;">
+          <b>Dónde enfocar la venta, y por qué:</b> tres señales distintas (IDH, remesas, productividad por tienda) coinciden en que CENTRO y NORTE son los mercados con más poder de compra sostenido — ahí conviene profundizar ticket y venta cruzada más que solo abrir tiendas. SUR es el caso más claro de expansión: la mayor productividad de toda la cartera (113.4 contratos/tienda) sin apoyarse en remesas altas ni en IDH alto — es demanda propia del mercado, no prestada, y hoy solo tiene 7 tiendas. OCCIDENTE es la única zona donde las tres señales son débiles a la vez y ya tiene cobertura relativamente amplia (24 tiendas) — no se recomienda priorizar más apertura de tiendas ahí; conviene primero adaptar producto y condiciones a un mercado de menor ingreso. ORIENTE queda en un punto intermedio: crece en participación pero sus fundamentos (IDH, remesas) son los más débiles después de OCCIDENTE — se recomienda monitorear antes de invertir con la misma fuerza que en SUR.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Estrategias recomendadas</h2>
+        <div class="section-note">Cuatro pasos concretos, cada uno nacido de un hallazgo real de este diagnóstico — vista consolidada, no cambia con el filtro de zona porque aplican a todo el negocio.</div>
+      </div>
+      <div class="strategy-grid">
+        <div class="scard" style="--sbar:var(--accent)">
+          <span class="spill">Producto</span>
+          <h4>Cerrar el recodificado KING-GS/KING-DP en el catálogo</h4>
+          <p>Ya confirmado que es el mismo tricimoto — actualizar el sistema para que deje de reportarse como dos modelos distintos. Aparte, entender con comercial por qué los contratos grandes tipo lote/flotilla eran más frecuentes antes del cambio de código (jun-2025), ya que eso —no el modelo— explica la caída del ticket promedio.</p>
+        </div>
+        <div class="scard" style="--sbar:var(--cat-3)">
+          <span class="spill">Geografía</span>
+          <h4>Expandir tiendas en SUR, no en OCCIDENTE</h4>
+          <p>SUR ya demuestra la mayor demanda por tienda de la cartera con solo 7 puntos de venta — es la prioridad clara de apertura. OCCIDENTE, en cambio, combina bajo IDH, baja remesa y baja productividad con cobertura ya amplia: ahí el foco es producto y condiciones, no más tiendas.</p>
+        </div>
+        <div class="scard" style="--sbar:var(--risk)">
+          <span class="spill">Riesgo y cobranza</span>
+          <h4>Atender aparte la cartera vieja (2022-2023)</h4>
+          <p>81.8% y 72.3% de mora entre los contratos aún activos de esas cosechas. Cobranza especializada, restructuración o castigo contable — sin diluirlo en el promedio general (31.6%).</p>
+        </div>
+        <div class="scard" style="--sbar:var(--good)">
+          <span class="spill">Fidelización</span>
+          <h4>Que cuidar al cliente que repite sea una decisión, no una casualidad</h4>
+          <p>Hoy, sin que nadie lo haya definido así, el cliente que repite ya paga 30% menos de prima y además cae menos en mora (27.9% vs. 32.1%) — es un cliente que nos conviene cuidar, y todavía no sabemos si ese trato distinto nace de una política real o de acuerdos informales caso por caso. Dos pasos concretos: <b>1)</b> formalizarlo como beneficio oficial, con reglas iguales para todos; <b>2)</b> avisar cuando un cliente esté por terminar de pagar, para ofrecerle su siguiente tricimoto antes de que se enfríe la relación — hoy 137 contratos activos ya llevan 85% o más pagado, y 123 de ellos todavía no son clientes recurrentes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Indicadores para seguimiento mensual</h2>
+        <div class="section-note">Los seis números que más vale la pena que los jefes revisen cada mes, uno por cada tema de este diagnóstico — corte sugerido dentro de los primeros 5 días hábiles, a cargo de Comercial y Mercado.</div>
+      </div>
+      <div class="indicator-panel">
+        <table class="ind-table">
+          <thead><tr><th>Indicador</th><th>Qué vigilar</th></tr></thead>
+          <tbody>
+            <tr><td>Mora por cosecha activa</td><td>El más importante de todos: si las cosechas 2025-2026 empiezan a repetir la trayectoria de mora de 2022-2023 al llegar a su misma edad.</td></tr>
+            <tr><td>Contratos originados en el mes</td><td>Ritmo de crecimiento real frente al promedio de los últimos 3 meses — sostiene la narrativa de expansión.</td></tr>
+            <tr><td>Mix de modelo del mes</td><td>Participación de MC300 frente a KING-GS/DP y MC-200 — MC300 es el que de verdad está ganando terreno, no una "transición" GS→DP (son el mismo modelo).</td></tr>
+            <tr><td>% de contratos con prima &gt; 0</td><td>Una baja sostenida desde 74.6% es la señal más directa de relajación de condiciones de originación.</td></tr>
+            <tr><td>Concentración Top-10 tiendas</td><td>Si la dependencia de canal (hoy 28.5% del volumen) crece o se diluye.</td></tr>
+            <tr><td>% de clientes recurrentes del mes</td><td>Tendencia frente a la base actual de 15.8% — valida si la fidelización avanza.</td></tr>
+          </tbody>
+        </table>
+        <div class="ind-note">Este panel resume los seis de mayor prioridad para una revisión rápida. El documento Word tiene el detalle completo (15 indicadores en las 4 dimensiones) para que el equipo de Comercial y Mercado los use día a día.</div>
+      </div>
+      <div class="ticket-callout" style="margin-top:14px;">
+        <b>Lo que ayudaría a ver más adelante:</b> hoy no sabemos la profesión, el rango de ingreso ni el lugar de trabajo de nuestros clientes — son datos que no están en ninguno de los sistemas que alimentan este diagnóstico. Si se pudieran capturar (por ejemplo, en la ficha de originación en tienda), ayudarían mucho a entender mejor a quién le estamos vendiendo y a afinar dónde enfocar cada estrategia de este documento. Se sumaron como pedido formal al equipo de datos.
+      </div>
+    </section>
+
+    <footer>
+      <div>Fuente y metodología: cifras calculadas sobre la hoja "Datos_Limpios" de Limpieza de datos de tricimoto.xlsx (5,183 filas depuradas, Factura como llave única de transacción). El análisis por cosecha usa "Año" = año de la columna "fecha" (originación del contrato); vista desde 2023 (2020-2022 excluidos por baja comparabilidad — compra institucional en 2020, bajo volumen en 2021-2022). Ticket por modelo excluye al cliente institucional 1000001437 (44 contratos, compra única en 2020). Cobertura oct-2020–ago-2026; 2026 es un año parcial. Alcance 100% interno, sin comparación con competencia. <b>Actualización 1-sep-2026:</b> confirmado con el equipo que KING-GS y KING-DP son el mismo tricimoto (código recodificado en el sistema entre jun. y nov. 2025) — todas las cifras de modelo en este documento ya los presentan unificados como "KING-GS/DP".</div>
+      <div class="fname">Preparado por Análisis de Estrategia de Negocios — Comercial y Mercado · 31 de agosto de 2026, actualizado 1 de septiembre de 2026</div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var DATA = {"zonas":["NORTE","CENTRO","SUR","LITORAL","OCCIDENTE","ORIENTE"],"years":[2023,2024,2025,2026],"modelos_mix":["KING-GS/DP","MC-200","MC300"],"data":{"TODAS":{"kpis":{"contratos_totales":5183,"contratos_activos":2247,"pct_activos":0.4335,"saldo_activo":133968041.0,"cuota_activa":11884909.0,"pct_mora_contratos":0.3155,"pct_mora_saldo":0.3132,"prima_promedio":22458.0,"pct_prima_gt0":0.7457},"cosecha":[{"anio":2023,"originados":850,"aun_activos":130,"pct_aun_activos":0.1529,"en_mora":94,"pct_mora":0.7231},{"anio":2024,"originados":1083,"aun_activos":393,"pct_aun_activos":0.3629,"en_mora":203,"pct_mora":0.5165},{"anio":2025,"originados":1453,"aun_activos":840,"pct_aun_activos":0.5781,"en_mora":249,"pct_mora":0.2964},{"anio":2026,"originados":1080,"aun_activos":838,"pct_aun_activos":0.7759,"en_mora":126,"pct_mora":0.1504}],"mix_modelo":[{"anio":2023,"KING-GS/DP":0.5918,"MC-200":0.3918,"MC300":0.0,"n":850},{"anio":2024,"KING-GS/DP":0.5199,"MC-200":0.4663,"MC300":0.0,"n":1083},{"anio":2025,"KING-GS/DP":0.5279,"MC-200":0.3792,"MC300":0.0785,"n":1453},{"anio":2026,"KING-GS/DP":0.437,"MC-200":0.2583,"MC300":0.2926,"n":1080}]},"NORTE":{"kpis":{"contratos_totales":1586,"contratos_activos":714,"pct_activos":0.4502,"saldo_activo":44750904.0,"cuota_activa":3742996.0,"pct_mora_contratos":0.3417,"pct_mora_saldo":0.3522,"prima_promedio":20554.0,"pct_prima_gt0":0.7295},"cosecha":[{"anio":2023,"originados":263,"aun_activos":48,"pct_aun_activos":0.1825,"en_mora":31,"pct_mora":0.6458},{"anio":2024,"originados":342,"aun_activos":141,"pct_aun_activos":0.4123,"en_mora":72,"pct_mora":0.5106},{"anio":2025,"originados":426,"aun_activos":254,"pct_aun_activos":0.5962,"en_mora":85,"pct_mora":0.3346},{"anio":2026,"originados":310,"aun_activos":251,"pct_aun_activos":0.8097,"en_mora":38,"pct_mora":0.1514}],"mix_modelo":[{"anio":2023,"KING-GS/DP":0.6806,"MC-200":0.308,"MC300":0.0,"n":263},{"anio":2024,"KING-GS/DP":0.5702,"MC-200":0.4152,"MC300":0.0,"n":342},{"anio":2025,"KING-GS/DP":0.5141,"MC-200":0.3709,"MC300":0.1103,"n":426},{"anio":2026,"KING-GS/DP":0.4387,"MC-200":0.2677,"MC300":0.271,"n":310}]},"CENTRO":{"kpis":{"contratos_totales":1037,"contratos_activos":450,"pct_activos":0.4339,"saldo_activo":28227168.0,"cuota_activa":2368775.0,"pct_mora_contratos":0.2956,"pct_mora_saldo":0.2894,"prima_promedio":20185.0,"pct_prima_gt0":0.6837},"cosecha":[{"anio":2023,"originados":157,"aun_activos":23,"pct_aun_activos":0.1465,"en_mora":17,"pct_mora":0.7391},{"anio":2024,"originados":225,"aun_activos":77,"pct_aun_activos":0.3422,"en_mora":36,"pct_mora":0.4675},{"anio":2025,"originados":285,"aun_activos":174,"pct_aun_activos":0.6105,"en_mora":53,"pct_mora":0.3046},{"anio":2026,"originados":211,"aun_activos":168,"pct_aun_activos":0.7962,"en_mora":21,"pct_mora":0.125}],"mix_modelo":[{"anio":2023,"KING-GS/DP":0.586,"MC-200":0.3885,"MC300":0.0,"n":157},{"anio":2024,"KING-GS/DP":0.56,"MC-200":0.4311,"MC300":0.0,"n":225},{"anio":2025,"KING-GS/DP":0.5544,"MC-200":0.3965,"MC300":0.0351,"n":285},{"anio":2026,"KING-GS/DP":0.4739,"MC-200":0.2607,"MC300":0.2607,"n":211}]},"SUR":{"kpis":{"contratos_totales":794,"contratos_activos":336,"pct_activos":0.4232,"saldo_activo":18604577.0,"cuota_activa":1745205.0,"pct_mora_contratos":0.3125,"pct_mora_saldo":0.2802,"prima_promedio":26828.0,"pct_prima_gt0":0.801},"cosecha":[{"anio":2023,"originados":147,"aun_activos":21,"pct_aun_activos":0.1429,"en_mora":18,"pct_mora":0.8571},{"anio":2024,"originados":158,"aun_activos":59,"pct_aun_activos":0.3734,"en_mora":30,"pct_mora":0.5085},{"anio":2025,"originados":205,"aun_activos":127,"pct_aun_activos":0.6195,"en_mora":30,"pct_mora":0.2362},{"anio":2026,"originados":157,"aun_activos":119,"pct_aun_activos":0.758,"en_mora":20,"pct_mora":0.1681}],"mix_modelo":[{"anio":2023,"KING-GS/DP":0.7075,"MC-200":0.2789,"MC300":0.0,"n":147},{"anio":2024,"KING-GS/DP":0.5127,"MC-200":0.481,"MC300":0.0,"n":158},{"anio":2025,"KING-GS/DP":0.5854,"MC-200":0.3512,"MC300":0.0634,"n":205},{"anio":2026,"KING-GS/DP":0.4395,"MC-200":0.293,"MC300":0.2675,"n":157}]},"LITORAL":{"kpis":{"contratos_totales":816,"contratos_activos":330,"pct_activos":0.4044,"saldo_activo":17887354.0,"cuota_activa":1830107.0,"pct_mora_contratos":0.3212,"pct_mora_saldo":0.2971,"prima_promedio":22475.0,"pct_prima_gt0":0.7868},"cosecha":[{"anio":2023,"originados":144,"aun_activos":18,"pct_aun_activos":0.125,"en_mora":13,"pct_mora":0.7222},{"anio":2024,"originados":170,"aun_activos":53,"pct_aun_activos":0.3118,"en_mora":31,"pct_mora":0.5849},{"anio":2025,"originados":241,"aun_activos":139,"pct_aun_activos":0.5768,"en_mora":40,"pct_mora":0.2878},{"anio":2026,"originados":166,"aun_activos":120,"pct_aun_activos":0.7229,"en_mora":22,"pct_mora":0.1833}],"mix_modelo":[{"anio":2023,"KING-GS/DP":0.4167,"MC-200":0.5833,"MC300":0.0,"n":144},{"anio":2024,"KING-GS/DP":0.4059,"MC-200":0.5941,"MC300":0.0,"n":170},{"anio":2025,"KING-GS/DP":0.4523,"MC-200":0.4855,"MC300":0.0539,"n":241},{"anio":2026,"KING-GS/DP":0.4096,"MC-200":0.2711,"MC300":0.3193,"n":166}]},"OCCIDENTE":{"kpis":{"contratos_totales":503,"contratos_activos":230,"pct_activos":0.4573,"saldo_activo":14643926.0,"cuota_activa":1184213.0,"pct_mora_contratos":0.3043,"pct_mora_saldo":0.3253,"prima_promedio":24358.0,"pct_prima_gt0":0.7416},"cosecha":[{"anio":2023,"originados":70,"aun_activos":10,"pct_aun_activos":0.1429,"en_mora":8,"pct_mora":0.8},{"anio":2024,"originados":98,"aun_activos":33,"pct_aun_activos":0.3367,"en_mora":21,"pct_mora":0.6364},{"anio":2025,"originados":166,"aun_activos":82,"pct_aun_activos":0.494,"en_mora":24,"pct_mora":0.2927},{"anio":2026,"originados":136,"aun_activos":99,"pct_aun_activos":0.7279,"en_mora":13,"pct_mora":0.1313}],"mix_modelo":[{"anio":2023,"KING-GS/DP":0.4,"MC-200":0.5429,"MC300":0.0,"n":70},{"anio":2024,"KING-GS/DP":0.4388,"MC-200":0.5,"MC300":0.0,"n":98},{"anio":2025,"KING-GS/DP":0.5361,"MC-200":0.2831,"MC300":0.1145,"n":166},{"anio":2026,"KING-GS/DP":0.4338,"MC-200":0.1765,"MC300":0.3529,"n":136}]},"ORIENTE":{"kpis":{"contratos_totales":447,"contratos_activos":187,"pct_activos":0.4183,"saldo_activo":9854112.0,"cuota_activa":1013613.0,"pct_mora_contratos":0.2727,"pct_mora_saldo":0.2775,"prima_promedio":24556.0,"pct_prima_gt0":0.7785},"cosecha":[{"anio":2023,"originados":69,"aun_activos":10,"pct_aun_activos":0.1449,"en_mora":7,"pct_mora":0.7},{"anio":2024,"originados":90,"aun_activos":30,"pct_aun_activos":0.3333,"en_mora":13,"pct_mora":0.4333},{"anio":2025,"originados":130,"aun_activos":64,"pct_aun_activos":0.4923,"en_mora":17,"pct_mora":0.2656},{"anio":2026,"originados":100,"aun_activos":81,"pct_aun_activos":0.81,"en_mora":12,"pct_mora":0.1481}],"mix_modelo":[{"anio":2023,"KING-GS/DP":0.5797,"MC-200":0.4058,"MC300":0.0,"n":69},{"anio":2024,"KING-GS/DP":0.5444,"MC-200":0.4444,"MC300":0.0,"n":90},{"anio":2025,"KING-GS/DP":0.5538,"MC-200":0.3385,"MC300":0.0923,"n":130},{"anio":2026,"KING-GS/DP":0.4,"MC-200":0.26,"MC300":0.34,"n":100}]}},"ticket_por_modelo":[{"modelo":"KING-GS/DP","n":2734,"cuota_prom":18124,"plazo_prom":28.9,"total_comprometido":433429,"mediana_comprometido":159838,"edad_prom_activos":15.4},{"modelo":"MC-200","n":1848,"cuota_prom":12993,"plazo_prom":27.5,"total_comprometido":362155,"mediana_comprometido":103568,"edad_prom_activos":15.3},{"modelo":"MC300","n":430,"cuota_prom":12993,"plazo_prom":23.3,"total_comprometido":265956,"mediana_comprometido":101999,"edad_prom_activos":5.7}]};
+
+  var MES_SERIE = [{"periodo": "2023-01", "contratos": 88}, {"periodo": "2023-02", "contratos": 76}, {"periodo": "2023-03", "contratos": 67}, {"periodo": "2023-04", "contratos": 66}, {"periodo": "2023-05", "contratos": 81}, {"periodo": "2023-06", "contratos": 65}, {"periodo": "2023-07", "contratos": 75}, {"periodo": "2023-08", "contratos": 53}, {"periodo": "2023-09", "contratos": 56}, {"periodo": "2023-10", "contratos": 72}, {"periodo": "2023-11", "contratos": 76}, {"periodo": "2023-12", "contratos": 75}, {"periodo": "2024-01", "contratos": 94}, {"periodo": "2024-02", "contratos": 107}, {"periodo": "2024-03", "contratos": 83}, {"periodo": "2024-04", "contratos": 82}, {"periodo": "2024-05", "contratos": 88}, {"periodo": "2024-06", "contratos": 61}, {"periodo": "2024-07", "contratos": 112}, {"periodo": "2024-08", "contratos": 80}, {"periodo": "2024-09", "contratos": 99}, {"periodo": "2024-10", "contratos": 93}, {"periodo": "2024-11", "contratos": 85}, {"periodo": "2024-12", "contratos": 99}, {"periodo": "2025-01", "contratos": 108}, {"periodo": "2025-02", "contratos": 145}, {"periodo": "2025-03", "contratos": 131}, {"periodo": "2025-04", "contratos": 134}, {"periodo": "2025-05", "contratos": 143}, {"periodo": "2025-06", "contratos": 123}, {"periodo": "2025-07", "contratos": 106}, {"periodo": "2025-08", "contratos": 122}, {"periodo": "2025-09", "contratos": 97}, {"periodo": "2025-10", "contratos": 122}, {"periodo": "2025-11", "contratos": 112}, {"periodo": "2025-12", "contratos": 110}, {"periodo": "2026-01", "contratos": 149}, {"periodo": "2026-02", "contratos": 131}, {"periodo": "2026-03", "contratos": 177}, {"periodo": "2026-04", "contratos": 142}, {"periodo": "2026-05", "contratos": 153}, {"periodo": "2026-06", "contratos": 143}, {"periodo": "2026-07", "contratos": 98}, {"periodo": "2026-08", "contratos": 87}];
+
+  var VOLUMEN = {"TODAS":[{"anio":2020,"originados":77},{"anio":2021,"originados":108},{"anio":2022,"originados":532},{"anio":2023,"originados":850},{"anio":2024,"originados":1083},{"anio":2025,"originados":1453},{"anio":2026,"originados":1080}],"NORTE":[{"anio":2020,"originados":9},{"anio":2021,"originados":44},{"anio":2022,"originados":192},{"anio":2023,"originados":263},{"anio":2024,"originados":342},{"anio":2025,"originados":426},{"anio":2026,"originados":310}],"CENTRO":[{"anio":2020,"originados":50},{"anio":2021,"originados":24},{"anio":2022,"originados":85},{"anio":2023,"originados":157},{"anio":2024,"originados":225},{"anio":2025,"originados":285},{"anio":2026,"originados":211}],"SUR":[{"anio":2020,"originados":11},{"anio":2021,"originados":18},{"anio":2022,"originados":98},{"anio":2023,"originados":147},{"anio":2024,"originados":158},{"anio":2025,"originados":205},{"anio":2026,"originados":157}],"LITORAL":[{"anio":2020,"originados":5},{"anio":2021,"originados":17},{"anio":2022,"originados":73},{"anio":2023,"originados":144},{"anio":2024,"originados":170},{"anio":2025,"originados":241},{"anio":2026,"originados":166}],"OCCIDENTE":[{"anio":2020,"originados":1},{"anio":2021,"originados":0},{"anio":2022,"originados":32},{"anio":2023,"originados":70},{"anio":2024,"originados":98},{"anio":2025,"originados":166},{"anio":2026,"originados":136}],"ORIENTE":[{"anio":2020,"originados":1},{"anio":2021,"originados":5},{"anio":2022,"originados":52},{"anio":2023,"originados":69},{"anio":2024,"originados":90},{"anio":2025,"originados":130},{"anio":2026,"originados":100}]};
+
+  var MODEL_COLOR = {
+    "KING-GS/DP": "var(--accent)",
+    "MC-200": "var(--cat-3)",
+    "MC300": "var(--cat-4)",
+    "Otros": "var(--cat-otros)"
+  };
+  var MODEL_ORDER = ["KING-GS/DP","MC-200","MC300","Otros"];
+
+  function fmtL(n){
+    return "L." + Math.round(n).toLocaleString("es-HN");
+  }
+  function fmtLcompact(n){
+    if (n >= 1000000) return "L." + (n/1000000).toFixed(2) + "M";
+    if (n >= 1000) return "L." + (n/1000).toFixed(0) + "k";
+    return "L." + Math.round(n);
+  }
+  function fmtPct(x, d){
+    d = d===undefined ? 1 : d;
+    return (x*100).toFixed(d) + "%";
+  }
+  function fmtN(n){ return Math.round(n).toLocaleString("es-HN"); }
+
+  var state = { zona: "TODAS" };
+
+  // ---------------- filter pills ----------------
+  var filterEl = document.getElementById("zonaFilter");
+  var zonaOptions = ["TODAS"].concat(DATA.zonas);
+  zonaOptions.forEach(function(z){
+    var btn = document.createElement("button");
+    btn.className = "seg-btn";
+    btn.type = "button";
+    btn.textContent = z === "TODAS" ? "Todas" : z.charAt(0) + z.slice(1).toLowerCase();
+    btn.setAttribute("aria-pressed", z === state.zona ? "true" : "false");
+    btn.addEventListener("click", function(){
+      state.zona = z;
+      Array.prototype.forEach.call(filterEl.children, function(c){
+        c.setAttribute("aria-pressed", c === btn ? "true" : "false");
+      });
+      render();
+    });
+    filterEl.appendChild(btn);
+  });
+
+  // ---------------- KPI strip ----------------
+  var kpiStrip = document.getElementById("kpiStrip");
+  var KPI_DEFS = [
+    { key:"contratos_activos", label:"Contratos activos", fmt:function(k){ return fmtN(k.contratos_activos); }, sub:function(k){ return fmtPct(k.pct_activos) + " del histórico"; } },
+    { key:"saldo_activo", label:"Saldo cartera activa", fmt:function(k){ return fmtLcompact(k.saldo_activo); }, sub:function(k){ return fmtL(k.saldo_activo); } },
+    { key:"cuota_activa", label:"Cuota mensual activa", fmt:function(k){ return fmtLcompact(k.cuota_activa); }, sub:function(k){ return fmtL(k.cuota_activa) + "/mes"; } },
+    { key:"pct_mora_contratos", label:"Mora (contratos activos)", fmt:function(k){ return fmtPct(k.pct_mora_contratos); }, sub:function(k){ return fmtPct(k.pct_mora_saldo) + " del saldo"; }, warn:true },
+    { key:"prima_promedio", label:"Prima promedio", fmt:function(k){ return fmtL(k.prima_promedio); }, sub:function(k){ return fmtPct(k.pct_prima_gt0,0) + " con prima > 0"; } }
+  ];
+  function renderKpis(k){
+    kpiStrip.innerHTML = "";
+    KPI_DEFS.forEach(function(def){
+      var tile = document.createElement("div");
+      tile.className = "kpi";
+      tile.innerHTML =
+        '<div class="klabel">' + def.label + '</div>' +
+        '<div class="kval num">' + def.fmt(k) + '</div>' +
+        '<div class="ksub num' + (def.warn ? ' warn' : '') + '">' + def.sub(k) + '</div>';
+      kpiStrip.appendChild(tile);
+    });
+  }
+
+  // ---------------- narrative zone stats ----------------
+  function renderNarrativeStats(zona){
+    var g = document.getElementById("goodZoneStat");
+    var r = document.getElementById("riskZoneStat");
+    if (zona === "TODAS"){
+      g.innerHTML = 'A nivel cartera: NORTE pasó de <b>40.7%</b> (2021) a <b>28.7%</b> (2026) del mix geográfico.';
+      r.innerHTML = 'Cosechas 2022–2023: <b>81.8%</b> y <b>72.3%</b> de mora entre los contratos aún activos.';
+    } else {
+      var mm = DATA.data[zona].mix_modelo;
+      var first = mm[0], last = mm[mm.length-1];
+      var cos = DATA.data[zona].cosecha;
+      g.innerHTML = 'En ' + zona + ': KING-GS/DP (mismo tricimoto) pasó de <b>' + fmtPct(first["KING-GS/DP"],0) + '</b> (2023) a <b>' + fmtPct(last["KING-GS/DP"],0) + '</b> (2026) del mix de originación.';
+      r.innerHTML = 'En ' + zona + ', cosecha 2023: <b>' + fmtPct(cos[0].pct_mora,1) + '</b> de mora entre los ' + cos[0].aun_activos + ' contratos aún activos.';
+    }
+  }
+
+  // ---------------- chart 1: mora por cosecha (bars + line), single 0-100% axis ----------------
+  var svgNS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs){
+    var e = document.createElementNS(svgNS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  var chartCosecha = document.getElementById("chartCosecha");
+  var ttCosecha = document.getElementById("ttCosecha");
+  var holderCosecha = document.getElementById("chartCosechaHolder");
+
+  function renderCosechaChart(rows){
+    chartCosecha.innerHTML = "";
+    var W = 520, H = 260;
+    var padL = 30, padR = 14, padT = 18, padB = 30;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = rows.length;
+    var slot = plotW / n;
+    var barW = Math.min(46, slot * 0.42);
+
+    function yFor(pct){ return padT + plotH * (1 - pct); }
+
+    // gridlines at 0/25/50/75/100
+    [0,0.25,0.5,0.75,1].forEach(function(g){
+      var y = yFor(g);
+      chartCosecha.appendChild(el("line", {x1:padL, x2:W-padR, y1:y, y2:y, class:"grid-line"}));
+      var t = el("text", {x: padL - 6, y: y+3, class:"axis-label", "text-anchor":"end"});
+      t.textContent = Math.round(g*100) + "%";
+      chartCosecha.appendChild(t);
+    });
+
+    var points = [];
+    rows.forEach(function(r, i){
+      var cx = padL + slot*i + slot/2;
+      // bar: % aun activos
+      var bx = cx - barW/2;
+      var by = yFor(r.pct_aun_activos);
+      var bh = (padT+plotH) - by;
+      var bar = el("rect", {x:bx, y:by, width:barW, height:Math.max(bh,1), rx:3, class:"bar-aun", "data-i":i});
+      chartCosecha.appendChild(bar);
+
+      var aunLabel = el("text", {x:cx, y: by - 6, class:"aun-val", "text-anchor":"middle"});
+      aunLabel.textContent = fmtPct(r.pct_aun_activos, 0);
+      chartCosecha.appendChild(aunLabel);
+
+      // year label
+      var yl = el("text", {x:cx, y: padT+plotH+18, class:"cat-year", "text-anchor":"middle"});
+      yl.textContent = r.anio;
+      chartCosecha.appendChild(yl);
+
+      points.push({x:cx, y:yFor(r.pct_mora), row:r});
+    });
+
+    // hover line
+    var hoverLine = el("line", {x1:0, x2:0, y1:padT, y2:padT+plotH, class:"hoverline"});
+    chartCosecha.appendChild(hoverLine);
+
+    // mora line path
+    var d = points.map(function(p,i){ return (i===0?"M":"L") + p.x.toFixed(1) + "," + p.y.toFixed(1); }).join(" ");
+    chartCosecha.appendChild(el("path", {d:d, class:"mora-line"}));
+
+    points.forEach(function(p){
+      chartCosecha.appendChild(el("circle", {cx:p.x, cy:p.y, r:4.5, class:"mora-dot"}));
+      var lbl = el("text", {x:p.x, y:p.y - 10, class:"mora-val", "text-anchor":"middle"});
+      lbl.textContent = fmtPct(p.row.pct_mora, 1);
+      chartCosecha.appendChild(lbl);
+    });
+
+    // hover interaction
+    var hitW = slot;
+    points.forEach(function(p, i){
+      var hit = el("rect", {x: padL + slot*i, y: padT, width: hitW, height: plotH, fill:"transparent", style:"cursor:pointer"});
+      hit.addEventListener("mousemove", function(evt){ showTooltipCosecha(evt, p); });
+      hit.addEventListener("mouseenter", function(evt){
+        hoverLine.setAttribute("x1", p.x); hoverLine.setAttribute("x2", p.x); hoverLine.style.opacity = 1;
+        showTooltipCosecha(evt, p);
+      });
+      hit.addEventListener("mouseleave", function(){ hoverLine.style.opacity = 0; ttCosecha.style.opacity = 0; });
+      chartCosecha.appendChild(hit);
+    });
+  }
+
+  function showTooltipCosecha(evt, p){
+    var r = p.row;
+    ttCosecha.innerHTML =
+      "<b>Cosecha " + r.anio + "</b><br>" +
+      "Originados: <b>" + fmtN(r.originados) + "</b><br>" +
+      "Aún activos: <b>" + fmtN(r.aun_activos) + "</b> (" + fmtPct(r.pct_aun_activos,0) + ")<br>" +
+      "En mora: <b>" + fmtN(r.en_mora) + "</b> (" + fmtPct(r.pct_mora,1) + " de activos)";
+    var box = holderCosecha.getBoundingClientRect();
+    var svgBox = chartCosecha.getBoundingClientRect();
+    var scaleX = svgBox.width / 520;
+    var scaleY = svgBox.height / 260;
+    var left = (svgBox.left - box.left) + p.x * scaleX;
+    var top = (svgBox.left ? (svgBox.top - box.top) : 0) + (p.y - 260) * 0 + (p.y) * scaleY - 10;
+    ttCosecha.style.left = left + "px";
+    ttCosecha.style.top = top + "px";
+    ttCosecha.style.opacity = 1;
+  }
+
+  // ---------------- chart 2: mix de modelo, stacked 100% bars ----------------
+  var chartMix = document.getElementById("chartMix");
+  var ttMix = document.getElementById("ttMix");
+  var holderMix = document.getElementById("chartMixHolder");
+  var mixLegend = document.getElementById("mixLegend");
+
+  mixLegend.innerHTML = MODEL_ORDER.map(function(m){
+    return '<div class="litem"><span class="lswatch" style="background:' + MODEL_COLOR[m] + '"></span>' + m + '</div>';
+  }).join("");
+
+  function renderMixChart(rows){
+    chartMix.innerHTML = "";
+    var W = 480, H = 260;
+    var padL = 10, padR = 10, padT = 12, padB = 30;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = rows.length;
+    var slot = plotW / n;
+    var barW = Math.min(64, slot * 0.62);
+
+    rows.forEach(function(r, i){
+      var cx = padL + slot*i + slot/2;
+      var bx = cx - barW/2;
+      var segs = MODEL_ORDER.map(function(m){
+        if (m === "Otros"){
+          var known = ["KING-GS/DP","MC-200","MC300"].reduce(function(s,k){ return s + (r[k]||0); }, 0);
+          return { m:m, v: Math.max(0, 1-known) };
+        }
+        return { m:m, v: r[m]||0 };
+      }).filter(function(s){ return s.v > 0.0001; });
+
+      var yCursor = padT + plotH;
+      segs.forEach(function(s){
+        var segH = plotH * s.v;
+        var y = yCursor - segH;
+        var rect = el("rect", {x:bx, y:y, width:barW, height:Math.max(segH-1.5,0), rx:2, fill: MODEL_COLOR[s.m], "data-m": s.m});
+        chartMix.appendChild(rect);
+        if (s.v >= 0.07){
+          var darkFill = (s.m === "MC300");
+          var lbl = el("text", {x:cx, y: y + segH/2 + 3.5, class:"seg-label" + (darkFill ? " dark-fill" : ""), "text-anchor":"middle"});
+          lbl.textContent = fmtPct(s.v, 0);
+          chartMix.appendChild(lbl);
+        }
+        var hit = el("rect", {x:bx, y:y, width:barW, height:Math.max(segH,1), fill:"transparent", style:"cursor:pointer"});
+        hit.addEventListener("mousemove", function(evt){ showTooltipMix(evt, r.anio, s.m, s.v); });
+        hit.addEventListener("mouseleave", function(){ ttMix.style.opacity = 0; });
+        chartMix.appendChild(hit);
+        yCursor = y;
+      });
+
+      var yl = el("text", {x:cx, y: padT+plotH+18, class:"cat-year", "text-anchor":"middle"});
+      yl.textContent = r.anio + " (n=" + r.n + ")";
+      chartMix.appendChild(yl);
+    });
+  }
+
+  function showTooltipMix(evt, anio, modelo, v){
+    ttMix.innerHTML = "<b>" + anio + "</b> · " + modelo + ": <b>" + fmtPct(v,1) + "</b>";
+    var box = holderMix.getBoundingClientRect();
+    var svgBox = chartMix.getBoundingClientRect();
+    var left = evt.clientX - box.left;
+    var top = evt.clientY - box.top - 14;
+    ttMix.style.left = left + "px";
+    ttMix.style.top = top + "px";
+    ttMix.style.opacity = 1;
+  }
+
+  // ---------------- volumen de originación chart (single-series bars, 7 years) ----------------
+  var chartVol = document.getElementById("chartVol");
+  var ttVol = document.getElementById("ttVol");
+  var holderVol = document.getElementById("chartVolHolder");
+
+  function renderVolChart(rows){
+    chartVol.innerHTML = "";
+    var W = 980, H = 150;
+    var padL = 34, padR = 14, padT = 10, padB = 22;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = rows.length;
+    var slot = plotW / n;
+    var barW = Math.min(70, slot * 0.5);
+    var maxV = Math.max.apply(null, rows.map(function(r){ return r.originados; })) * 1.12;
+
+    [0,0.5,1].forEach(function(g){
+      var y = padT + plotH * (1-g);
+      chartVol.appendChild(el("line", {x1:padL, x2:W-padR, y1:y, y2:y, class:"grid-line"}));
+    });
+
+    rows.forEach(function(r, i){
+      var cx = padL + slot*i + slot/2;
+      var bh = maxV > 0 ? (plotH * r.originados / maxV) : 0;
+      var by = padT + plotH - bh;
+      var bx = cx - barW/2;
+      var isPartial = r.anio === 2026;
+      var rect = el("rect", {x:bx, y:by, width:barW, height:Math.max(bh,1), rx:3, fill:"var(--accent)", opacity: isPartial ? 0.55 : 1});
+      chartVol.appendChild(rect);
+      var lbl = el("text", {x:cx, y: by - 6, class:"aun-val", "text-anchor":"middle"});
+      lbl.textContent = fmtN(r.originados);
+      chartVol.appendChild(lbl);
+      var yl = el("text", {x:cx, y: padT+plotH+16, class:"cat-year", "text-anchor":"middle"});
+      yl.textContent = r.anio + (isPartial ? "*" : "");
+      chartVol.appendChild(yl);
+
+      var hit = el("rect", {x: padL + slot*i, y: padT, width: slot, height: plotH, fill:"transparent", style:"cursor:pointer"});
+      hit.addEventListener("mousemove", function(evt){ showTooltipVol(evt, r, isPartial); });
+      hit.addEventListener("mouseleave", function(){ ttVol.style.opacity = 0; });
+      chartVol.appendChild(hit);
+    });
+  }
+
+  function showTooltipVol(evt, r, isPartial){
+    ttVol.innerHTML = "<b>" + r.anio + "</b>" + (isPartial ? " (parcial, a ago-2026)" : "") + "<br>" + fmtN(r.originados) + " contratos originados";
+    var box = holderVol.getBoundingClientRect();
+    ttVol.style.left = (evt.clientX - box.left) + "px";
+    ttVol.style.top = (evt.clientY - box.top - 14) + "px";
+    ttVol.style.opacity = 1;
+  }
+
+  // ---------------- estacionalidad mensual (44 meses, ene-2023 a ago-2026) ----------------
+  var MES_NOMBRES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  var chartMes = document.getElementById("chartMes");
+  var ttMes = document.getElementById("ttMes");
+  var holderMes = document.getElementById("chartMesHolder");
+
+  function renderMesChart(rows){
+    chartMes.innerHTML = "";
+    var W = 980, H = 150;
+    var padL = 30, padR = 10, padT = 10, padB = 20;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = rows.length;
+    var slot = plotW / n;
+    var barW = Math.max(slot * 0.62, 2);
+    var maxV = Math.max.apply(null, rows.map(function(r){ return r.contratos; })) * 1.1;
+
+    [0,0.5,1].forEach(function(g){
+      var y = padT + plotH * (1-g);
+      chartMes.appendChild(el("line", {x1:padL, x2:W-padR, y1:y, y2:y, class:"grid-line"}));
+    });
+
+    rows.forEach(function(r, i){
+      var mesNum = parseInt(r.periodo.slice(5,7), 10);
+      var anio = r.periodo.slice(0,4);
+      var cx = padL + slot*i + slot/2;
+      var bh = maxV > 0 ? (plotH * r.contratos / maxV) : 0;
+      var by = padT + plotH - bh;
+      var bx = cx - barW/2;
+      var isFeb = mesNum === 2;
+      var isAug = mesNum === 8;
+      var fill = isFeb ? "var(--good)" : (isAug ? "var(--risk)" : "var(--accent)");
+      var op = (isFeb || isAug) ? 1 : 0.72;
+      var rect = el("rect", {x:bx, y:by, width:barW, height:Math.max(bh,1), rx:1.5, fill: fill, opacity: op});
+      chartMes.appendChild(rect);
+
+      if (mesNum === 1){
+        var yl = el("text", {x:cx - slot*0.5, y: padT+plotH+15, class:"cat-year", "text-anchor":"start"});
+        yl.textContent = anio;
+        chartMes.appendChild(yl);
+        chartMes.appendChild(el("line", {x1:cx - slot*0.5, x2:cx - slot*0.5, y1:padT, y2:padT+plotH, class:"grid-line", opacity:0.5}));
+      }
+
+      var hit = el("rect", {x: padL + slot*i, y: padT, width: slot, height: plotH, fill:"transparent", style:"cursor:pointer"});
+      hit.addEventListener("mousemove", function(evt){ showTooltipMes(evt, r, mesNum); });
+      hit.addEventListener("mouseleave", function(){ ttMes.style.opacity = 0; });
+      chartMes.appendChild(hit);
+    });
+  }
+
+  function showTooltipMes(evt, r, mesNum){
+    var tag = mesNum === 2 ? " — consistentemente alto (3/3 años)" : (mesNum === 8 ? " — bajo en 2 de 3 años" : "");
+    ttMes.innerHTML = "<b>" + MES_NOMBRES[mesNum-1] + "-" + r.periodo.slice(0,4) + "</b><br>" + fmtN(r.contratos) + " contratos" + tag;
+    var box = holderMes.getBoundingClientRect();
+    ttMes.style.left = (evt.clientX - box.left) + "px";
+    ttMes.style.top = (evt.clientY - box.top - 14) + "px";
+    ttMes.style.opacity = 1;
+  }
+
+  // ---------------- fixed ticket-por-modelo bars ----------------
+  function renderTicketBars(){
+    var ticketEl = document.getElementById("ticketBars");
+    var edadEl = document.getElementById("edadBars");
+    var maxTicket = Math.max.apply(null, DATA.ticket_por_modelo.map(function(t){ return t.total_comprometido; }));
+    var maxEdad = Math.max.apply(null, DATA.ticket_por_modelo.map(function(t){ return t.edad_prom_activos; }));
+    ticketEl.innerHTML = "";
+    edadEl.innerHTML = "";
+    DATA.ticket_por_modelo.forEach(function(t){
+      var color = MODEL_COLOR[t.modelo] || "var(--accent)";
+      var row1 = document.createElement("div");
+      row1.className = "tbar-row";
+      row1.innerHTML =
+        '<div class="tbar-name">' + t.modelo + '</div>' +
+        '<div class="tbar-track"><div class="tbar-fill" style="width:' + (100*t.total_comprometido/maxTicket).toFixed(1) + '%; background:' + color + '"></div></div>' +
+        '<div class="tbar-val num">' + fmtL(t.total_comprometido) + '</div>';
+      ticketEl.appendChild(row1);
+
+      var row2 = document.createElement("div");
+      row2.className = "tbar-row";
+      row2.innerHTML =
+        '<div class="tbar-name">' + t.modelo + '</div>' +
+        '<div class="tbar-track"><div class="tbar-fill" style="width:' + (100*t.edad_prom_activos/maxEdad).toFixed(1) + '%; background:' + color + '"></div></div>' +
+        '<div class="tbar-val num">' + t.edad_prom_activos.toFixed(1) + ' m</div>';
+      edadEl.appendChild(row2);
+    });
+  }
+
+  // ---------------- master render ----------------
+  function render(){
+    var zd = DATA.data[state.zona];
+    renderKpis(zd.kpis);
+    renderNarrativeStats(state.zona);
+    renderCosechaChart(zd.cosecha);
+    renderMixChart(zd.mix_modelo);
+    renderVolChart(VOLUMEN[state.zona]);
+    renderMesChart(MES_SERIE);
+  }
+
+  renderTicketBars();
+  render();
+
+  window.addEventListener("resize", render);
+})();
+</script>
+
+</body>
+</html>
