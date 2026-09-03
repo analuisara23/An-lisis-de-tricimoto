@@ -241,6 +241,14 @@
   .mora-dot{fill:var(--risk); stroke:var(--surface); stroke-width:2;}
   .mora-val{font-size:11px; font-weight:700; fill:var(--risk); font-family:"IBM Plex Mono", monospace;}
   .aun-val{font-size:10px; fill:var(--ink-3); font-family:"IBM Plex Mono", monospace;}
+  .conv-line{fill:none; stroke:var(--accent); stroke-width:2.25; stroke-linecap:round; stroke-linejoin:round;}
+  .conv-dot{fill:var(--accent); stroke:var(--surface); stroke-width:2;}
+  .conv-val{font-size:11px; font-weight:700; fill:var(--accent); font-family:"IBM Plex Mono", monospace;}
+  .venta-total-line{fill:none; stroke:var(--ink-3); stroke-width:2.25; stroke-linecap:round; stroke-linejoin:round;}
+  .venta-total-dot{fill:var(--ink-3); stroke:var(--surface); stroke-width:2;}
+  .venta-credito-line{fill:none; stroke:var(--accent); stroke-width:2.25; stroke-linecap:round; stroke-linejoin:round;}
+  .venta-credito-dot{fill:var(--accent); stroke:var(--surface); stroke-width:2;}
+  .venta-val{font-size:10px; font-weight:700; font-family:"IBM Plex Mono", monospace;}
 
   .hoverline{stroke:var(--ink-3); stroke-width:1; stroke-dasharray:2 3; opacity:0;}
   .tooltip{
@@ -366,6 +374,38 @@
     </section>
 
     <section class="kpis" id="kpiStrip" aria-label="Indicadores clave"></section>
+
+    <section class="charts">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Conversión a crédito por año</h3>
+            <div class="phint">% de los productos vendidos cada año que se financiaron a crédito (sobre <b>todos</b> los productos vendidos, crédito + contado — 7,215 líneas en total, una base distinta a los 5,117 contratos del resto del dashboard).</div>
+          </div>
+        </div>
+        <div class="chart-holder" id="chartConvHolder">
+          <svg id="chartConv" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="tooltip" id="ttConv"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Venta total vs. venta a crédito, por año</h3>
+            <div class="phint">Monto vendido cada año (columna "Venta Financiada" del extracto): la línea gris es todos los productos, la azul es solo la parte financiada a crédito.</div>
+          </div>
+        </div>
+        <div class="chart-holder" id="chartVentaHolder">
+          <svg id="chartVenta" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="tooltip" id="ttVenta"></div>
+        </div>
+        <div class="legend">
+          <div class="litem"><span class="lline" style="background:var(--ink-3)"></span>Venta total</div>
+          <div class="litem"><span class="lline" style="background:var(--accent)"></span>Venta a crédito</div>
+        </div>
+      </div>
+    </section>
 
     <section class="panel" id="volumenPanel">
       <div class="panel-head">
@@ -507,10 +547,10 @@
         <table class="ind-table">
           <thead><tr><th>Zona</th><th>Tiendas</th><th>Contratos</th><th>Contratos / tienda</th></tr></thead>
           <tbody>
-            <tr><td>SUR</td><td>7</td><td>794</td><td><b style="color:var(--good)">113.4</b></td></tr>
-            <tr><td>NORTE</td><td>30</td><td>1,586</td><td>52.9</td></tr>
-            <tr><td>LITORAL</td><td>20</td><td>816</td><td>40.8</td></tr>
-            <tr><td>CENTRO</td><td>31</td><td>1,037</td><td>33.5</td></tr>
+            <tr><td>SUR</td><td>7</td><td>786</td><td><b style="color:var(--good)">112.3</b></td></tr>
+            <tr><td>NORTE</td><td>30</td><td>1,582</td><td>52.7</td></tr>
+            <tr><td>LITORAL</td><td>19</td><td>810</td><td>42.6</td></tr>
+            <tr><td>CENTRO</td><td>29</td><td>990</td><td>34.1</td></tr>
             <tr><td>ORIENTE</td><td>19</td><td>447</td><td>23.5</td></tr>
             <tr><td>OCCIDENTE</td><td>24</td><td>503</td><td><b style="color:var(--risk)">21.0</b></td></tr>
           </tbody>
@@ -547,7 +587,7 @@
           </tbody>
         </table>
         <div class="ticket-callout" style="margin-top:14px;">
-          <b>Dónde enfocar la venta, y por qué:</b> tres señales distintas (IDH, remesas, productividad por tienda) coinciden en que CENTRO y NORTE son los mercados con más poder de compra sostenido — ahí conviene profundizar ticket y venta cruzada más que solo abrir tiendas. SUR es el caso más claro de expansión: la mayor productividad de toda la cartera (113.4 contratos/tienda) sin apoyarse en remesas altas ni en IDH alto — es demanda propia del mercado, no prestada, y hoy solo tiene 7 tiendas. OCCIDENTE es la única zona donde las tres señales son débiles a la vez y ya tiene cobertura relativamente amplia (24 tiendas) — no se recomienda priorizar más apertura de tiendas ahí; conviene primero adaptar producto y condiciones a un mercado de menor ingreso. ORIENTE queda en un punto intermedio: crece en participación pero sus fundamentos (IDH, remesas) son los más débiles después de OCCIDENTE — se recomienda monitorear antes de invertir con la misma fuerza que en SUR.
+          <b>Dónde enfocar la venta, y por qué:</b> tres señales distintas (IDH, remesas, productividad por tienda) coinciden en que CENTRO y NORTE son los mercados con más poder de compra sostenido — ahí conviene profundizar ticket y venta cruzada más que solo abrir tiendas. SUR es el caso más claro de expansión: la mayor productividad de toda la cartera (112.3 contratos/tienda) sin apoyarse en remesas altas ni en IDH alto — es demanda propia del mercado, no prestada, y hoy solo tiene 7 tiendas. OCCIDENTE es la única zona donde las tres señales son débiles a la vez y ya tiene cobertura relativamente amplia (24 tiendas) — no se recomienda priorizar más apertura de tiendas ahí; conviene primero adaptar producto y condiciones a un mercado de menor ingreso. ORIENTE queda en un punto intermedio: crece en participación pero sus fundamentos (IDH, remesas) son los más débiles después de OCCIDENTE — se recomienda monitorear antes de invertir con la misma fuerza que en SUR.
         </div>
       </div>
     </section>
@@ -571,7 +611,7 @@
         <div class="scard" style="--sbar:var(--risk)">
           <span class="spill">Riesgo y cobranza</span>
           <h4>Atender aparte la cartera vieja (2022-2023)</h4>
-          <p>79.6% y 69.8% de mora entre los contratos aún activos de esas cosechas. Cobranza especializada, restructuración o castigo contable — sin diluirlo en el promedio general (29.3%).</p>
+          <p>79.5% y 69.8% de mora entre los contratos aún activos de esas cosechas. Cobranza especializada, restructuración o castigo contable — sin diluirlo en el promedio general (29.3%).</p>
         </div>
         <div class="scard" style="--sbar:var(--good)">
           <span class="spill">Fidelización</span>
@@ -595,7 +635,7 @@
             <tr><td>Mix de modelo del mes</td><td>Participación de MC300 frente a KING-GS/DP y MC-200 — MC300 es el modelo que más terreno está ganando mes a mes.</td></tr>
             <tr><td>% de contratos con prima &gt; 0</td><td>Una baja sostenida desde 75.4% es la señal más directa de relajación de condiciones de originación.</td></tr>
             <tr><td>Concentración Top-10 tiendas</td><td>Si la dependencia de canal (hoy 28.5% del volumen) crece o se diluye.</td></tr>
-            <tr><td>% de clientes recurrentes del mes</td><td>Tendencia frente a la base actual de 7.1% — valida si la fidelización avanza.</td></tr>
+            <tr><td>% de clientes recurrentes del mes</td><td>Tendencia frente a la base actual de 14.9% — valida si la fidelización avanza.</td></tr>
           </tbody>
         </table>
         <div class="ind-note">Este panel resume los seis de mayor prioridad para una revisión rápida. El documento Word tiene el detalle completo (15 indicadores en las 4 dimensiones) para que el equipo de Comercial y Mercado los use día a día.</div>
@@ -617,11 +657,12 @@
 (function(){
   "use strict";
 
-  var DATA = {"zonas":["NORTE","CENTRO","SUR","LITORAL","OCCIDENTE","ORIENTE"],"years":[2022,2023,2024,2025,2026],"modelos_mix":["KING-GS/DP","MC-200","MC300"],"data":{"TODAS":{"kpis":{"contratos_totales":5117,"contratos_activos":2252,"pct_activos":0.4401,"saldo_activo":133824811.0,"cuota_activa":11947250.0,"pct_mora_contratos":0.2926,"pct_mora_saldo":0.2973,"prima_promedio":22752.0,"pct_prima_gt0":0.7538},"cosecha":[{"anio":2022,"originados":532,"aun_activos":44,"pct_aun_activos":0.0827,"en_mora":35,"pct_mora":0.7955},{"anio":2023,"originados":850,"aun_activos":129,"pct_aun_activos":0.1518,"en_mora":90,"pct_mora":0.6977},{"anio":2024,"originados":1083,"aun_activos":391,"pct_aun_activos":0.361,"en_mora":182,"pct_mora":0.4655},{"anio":2025,"originados":1452,"aun_activos":838,"pct_aun_activos":0.5771,"en_mora":213,"pct_mora":0.2542},{"anio":2026,"originados":1093,"aun_activos":848,"pct_aun_activos":0.7758,"en_mora":138,"pct_mora":0.1627}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.703,"MC-200":0.2914,"MC300":0.0,"n":532},{"anio":2023,"KING-GS/DP":0.5918,"MC-200":0.3918,"MC300":0.0,"n":850},{"anio":2024,"KING-GS/DP":0.5199,"MC-200":0.4663,"MC300":0.0,"n":1083},{"anio":2025,"KING-GS/DP":0.5275,"MC-200":0.3795,"MC300":0.0785,"n":1452},{"anio":2026,"KING-GS/DP":0.4346,"MC-200":0.2589,"MC300":0.2946,"n":1093}]},"NORTE":{"kpis":{"contratos_totales":1582,"contratos_activos":714,"pct_activos":0.4513,"saldo_activo":44785890.0,"cuota_activa":3735140.0,"pct_mora_contratos":0.3333,"pct_mora_saldo":0.3508,"prima_promedio":20561.0,"pct_prima_gt0":0.7282},"cosecha":[{"anio":2022,"originados":192,"aun_activos":19,"pct_aun_activos":0.099,"en_mora":16,"pct_mora":0.8421},{"anio":2023,"originados":263,"aun_activos":48,"pct_aun_activos":0.1825,"en_mora":30,"pct_mora":0.625},{"anio":2024,"originados":342,"aun_activos":140,"pct_aun_activos":0.4094,"en_mora":65,"pct_mora":0.4643},{"anio":2025,"originados":426,"aun_activos":254,"pct_aun_activos":0.5962,"en_mora":78,"pct_mora":0.3071},{"anio":2026,"originados":315,"aun_activos":252,"pct_aun_activos":0.8,"en_mora":48,"pct_mora":0.1905}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.7292,"MC-200":0.2656,"MC300":0.0,"n":192},{"anio":2023,"KING-GS/DP":0.6806,"MC-200":0.308,"MC300":0.0,"n":263},{"anio":2024,"KING-GS/DP":0.5702,"MC-200":0.4152,"MC300":0.0,"n":342},{"anio":2025,"KING-GS/DP":0.5141,"MC-200":0.3709,"MC300":0.1103,"n":426},{"anio":2026,"KING-GS/DP":0.4413,"MC-200":0.2667,"MC300":0.2698,"n":315}]},"CENTRO":{"kpis":{"contratos_totales":990,"contratos_activos":454,"pct_activos":0.4586,"saldo_activo":28338706.0,"cuota_activa":2414000.0,"pct_mora_contratos":0.2643,"pct_mora_saldo":0.2677,"prima_promedio":21191.0,"pct_prima_gt0":0.7172},"cosecha":[{"anio":2022,"originados":85,"aun_activos":8,"pct_aun_activos":0.0941,"en_mora":6,"pct_mora":0.75},{"anio":2023,"originados":157,"aun_activos":23,"pct_aun_activos":0.1465,"en_mora":16,"pct_mora":0.6957},{"anio":2024,"originados":225,"aun_activos":77,"pct_aun_activos":0.3422,"en_mora":32,"pct_mora":0.4156},{"anio":2025,"originados":284,"aun_activos":174,"pct_aun_activos":0.6127,"en_mora":40,"pct_mora":0.2299},{"anio":2026,"originados":215,"aun_activos":172,"pct_aun_activos":0.8,"en_mora":26,"pct_mora":0.1512}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.6941,"MC-200":0.3059,"MC300":0.0,"n":85},{"anio":2023,"KING-GS/DP":0.586,"MC-200":0.3885,"MC300":0.0,"n":157},{"anio":2024,"KING-GS/DP":0.56,"MC-200":0.4311,"MC300":0.0,"n":225},{"anio":2025,"KING-GS/DP":0.5528,"MC-200":0.3979,"MC300":0.0352,"n":284},{"anio":2026,"KING-GS/DP":0.4698,"MC-200":0.2605,"MC300":0.2651,"n":215}]},"SUR":{"kpis":{"contratos_totales":786,"contratos_activos":336,"pct_activos":0.4275,"saldo_activo":18497999.0,"cuota_activa":1748148.0,"pct_mora_contratos":0.2768,"pct_mora_saldo":0.26,"prima_promedio":27204.0,"pct_prima_gt0":0.8092},"cosecha":[{"anio":2022,"originados":98,"aun_activos":9,"pct_aun_activos":0.0918,"en_mora":7,"pct_mora":0.7778},{"anio":2023,"originados":147,"aun_activos":20,"pct_aun_activos":0.1361,"en_mora":16,"pct_mora":0.8},{"anio":2024,"originados":158,"aun_activos":58,"pct_aun_activos":0.3671,"en_mora":26,"pct_mora":0.4483},{"anio":2025,"originados":205,"aun_activos":127,"pct_aun_activos":0.6195,"en_mora":25,"pct_mora":0.1969},{"anio":2026,"originados":160,"aun_activos":121,"pct_aun_activos":0.7562,"en_mora":19,"pct_mora":0.157}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.7143,"MC-200":0.2857,"MC300":0.0,"n":98},{"anio":2023,"KING-GS/DP":0.7075,"MC-200":0.2789,"MC300":0.0,"n":147},{"anio":2024,"KING-GS/DP":0.5127,"MC-200":0.481,"MC300":0.0,"n":158},{"anio":2025,"KING-GS/DP":0.5854,"MC-200":0.3512,"MC300":0.0634,"n":205},{"anio":2026,"KING-GS/DP":0.4375,"MC-200":0.2938,"MC300":0.2688,"n":160}]},"LITORAL":{"kpis":{"contratos_totales":809,"contratos_activos":330,"pct_activos":0.4079,"saldo_activo":17829373.0,"cuota_activa":1839695.0,"pct_mora_contratos":0.2848,"pct_mora_saldo":0.2637,"prima_promedio":22578.0,"pct_prima_gt0":0.7889},"cosecha":[{"anio":2022,"originados":73,"aun_activos":0,"pct_aun_activos":0.0,"en_mora":0,"pct_mora":0},{"anio":2023,"originados":144,"aun_activos":18,"pct_aun_activos":0.125,"en_mora":13,"pct_mora":0.7222},{"anio":2024,"originados":170,"aun_activos":53,"pct_aun_activos":0.3118,"en_mora":27,"pct_mora":0.5094},{"anio":2025,"originados":241,"aun_activos":138,"pct_aun_activos":0.5726,"en_mora":33,"pct_mora":0.2391},{"anio":2026,"originados":165,"aun_activos":121,"pct_aun_activos":0.7333,"en_mora":21,"pct_mora":0.1736}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.5753,"MC-200":0.4247,"MC300":0.0,"n":73},{"anio":2023,"KING-GS/DP":0.4167,"MC-200":0.5833,"MC300":0.0,"n":144},{"anio":2024,"KING-GS/DP":0.4059,"MC-200":0.5941,"MC300":0.0,"n":170},{"anio":2025,"KING-GS/DP":0.4523,"MC-200":0.4855,"MC300":0.0539,"n":241},{"anio":2026,"KING-GS/DP":0.4,"MC-200":0.2727,"MC300":0.3273,"n":165}]},"OCCIDENTE":{"kpis":{"contratos_totales":503,"contratos_activos":231,"pct_activos":0.4592,"saldo_activo":14581653.0,"cuota_activa":1195025.0,"pct_mora_contratos":0.2987,"pct_mora_saldo":0.3162,"prima_promedio":24459.0,"pct_prima_gt0":0.7416},"cosecha":[{"anio":2022,"originados":32,"aun_activos":6,"pct_aun_activos":0.1875,"en_mora":4,"pct_mora":0.6667},{"anio":2023,"originados":70,"aun_activos":10,"pct_aun_activos":0.1429,"en_mora":8,"pct_mora":0.8},{"anio":2024,"originados":98,"aun_activos":33,"pct_aun_activos":0.3367,"en_mora":20,"pct_mora":0.6061},{"anio":2025,"originados":166,"aun_activos":82,"pct_aun_activos":0.494,"en_mora":23,"pct_mora":0.2805},{"anio":2026,"originados":137,"aun_activos":100,"pct_aun_activos":0.7299,"en_mora":14,"pct_mora":0.14}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.6875,"MC-200":0.2812,"MC300":0.0,"n":32},{"anio":2023,"KING-GS/DP":0.4,"MC-200":0.5429,"MC300":0.0,"n":70},{"anio":2024,"KING-GS/DP":0.4388,"MC-200":0.5,"MC300":0.0,"n":98},{"anio":2025,"KING-GS/DP":0.5361,"MC-200":0.2831,"MC300":0.1145,"n":166},{"anio":2026,"KING-GS/DP":0.4307,"MC-200":0.1752,"MC300":0.3577,"n":137}]},"ORIENTE":{"kpis":{"contratos_totales":447,"contratos_activos":187,"pct_activos":0.4183,"saldo_activo":9791190.0,"cuota_activa":1015240.0,"pct_mora_contratos":0.2406,"pct_mora_saldo":0.241,"prima_promedio":24525.0,"pct_prima_gt0":0.7785},"cosecha":[{"anio":2022,"originados":52,"aun_activos":2,"pct_aun_activos":0.0385,"en_mora":2,"pct_mora":1.0},{"anio":2023,"originados":69,"aun_activos":10,"pct_aun_activos":0.1449,"en_mora":7,"pct_mora":0.7},{"anio":2024,"originados":90,"aun_activos":30,"pct_aun_activos":0.3333,"en_mora":12,"pct_mora":0.4},{"anio":2025,"originados":130,"aun_activos":63,"pct_aun_activos":0.4846,"en_mora":14,"pct_mora":0.2222},{"anio":2026,"originados":101,"aun_activos":82,"pct_aun_activos":0.8119,"en_mora":10,"pct_mora":0.122}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.7885,"MC-200":0.1923,"MC300":0.0,"n":52},{"anio":2023,"KING-GS/DP":0.5797,"MC-200":0.4058,"MC300":0.0,"n":69},{"anio":2024,"KING-GS/DP":0.5444,"MC-200":0.4444,"MC300":0.0,"n":90},{"anio":2025,"KING-GS/DP":0.5538,"MC-200":0.3385,"MC300":0.0923,"n":130},{"anio":2026,"KING-GS/DP":0.396,"MC-200":0.2673,"MC300":0.3366,"n":101}]}},"ticket_por_modelo":[{"modelo":"KING-GS/DP","n":2565,"cuota_prom":13104.0,"plazo_prom":30.2,"total_comprometido":447204.0,"mediana_comprometido":164531.0,"edad_prom_activos":15.3},{"modelo":"MC-200","n":1784,"cuota_prom":12020.0,"plazo_prom":28.1,"total_comprometido":369699.0,"mediana_comprometido":104820.0,"edad_prom_activos":15.2},{"modelo":"MC300","n":419,"cuota_prom":10720.0,"plazo_prom":23.9,"total_comprometido":270358.0,"mediana_comprometido":103543.0,"edad_prom_activos":5.6}]};
+  var DATA = {"zonas":["NORTE","CENTRO","SUR","LITORAL","OCCIDENTE","ORIENTE"],"years":[2022,2023,2024,2025,2026],"modelos_mix":["KING-GS/DP","MC-200","MC300"],"data":{"TODAS":{"kpis":{"contratos_totales":5117,"contratos_activos":2252,"pct_activos":0.4401,"saldo_activo":133824811.0,"cuota_activa":11947250.0,"pct_mora_contratos":0.2926,"pct_mora_saldo":0.2973,"prima_promedio":22752.0,"pct_prima_gt0":0.7538,"n_productos":7215,"n_credito":5306,"pct_conversion_credito":0.7354,"venta_total":622214272.0},"cosecha":[{"anio":2022,"originados":532,"aun_activos":44,"pct_aun_activos":0.0827,"en_mora":35,"pct_mora":0.7955},{"anio":2023,"originados":850,"aun_activos":129,"pct_aun_activos":0.1518,"en_mora":90,"pct_mora":0.6977},{"anio":2024,"originados":1083,"aun_activos":391,"pct_aun_activos":0.361,"en_mora":182,"pct_mora":0.4655},{"anio":2025,"originados":1452,"aun_activos":838,"pct_aun_activos":0.5771,"en_mora":213,"pct_mora":0.2542},{"anio":2026,"originados":1093,"aun_activos":848,"pct_aun_activos":0.7758,"en_mora":138,"pct_mora":0.1627}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.703,"MC-200":0.2914,"MC300":0.0,"n":532},{"anio":2023,"KING-GS/DP":0.5918,"MC-200":0.3918,"MC300":0.0,"n":850},{"anio":2024,"KING-GS/DP":0.5199,"MC-200":0.4663,"MC300":0.0,"n":1083},{"anio":2025,"KING-GS/DP":0.5275,"MC-200":0.3795,"MC300":0.0785,"n":1452},{"anio":2026,"KING-GS/DP":0.4346,"MC-200":0.2589,"MC300":0.2946,"n":1093}]},"NORTE":{"kpis":{"contratos_totales":1582,"contratos_activos":714,"pct_activos":0.4513,"saldo_activo":44785890.0,"cuota_activa":3735140.0,"pct_mora_contratos":0.3333,"pct_mora_saldo":0.3508,"prima_promedio":20561.0,"pct_prima_gt0":0.7282,"n_productos":2180,"n_credito":1654,"pct_conversion_credito":0.7587,"venta_total":190031502.0},"cosecha":[{"anio":2022,"originados":192,"aun_activos":19,"pct_aun_activos":0.099,"en_mora":16,"pct_mora":0.8421},{"anio":2023,"originados":263,"aun_activos":48,"pct_aun_activos":0.1825,"en_mora":30,"pct_mora":0.625},{"anio":2024,"originados":342,"aun_activos":140,"pct_aun_activos":0.4094,"en_mora":65,"pct_mora":0.4643},{"anio":2025,"originados":426,"aun_activos":254,"pct_aun_activos":0.5962,"en_mora":78,"pct_mora":0.3071},{"anio":2026,"originados":315,"aun_activos":252,"pct_aun_activos":0.8,"en_mora":48,"pct_mora":0.1905}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.7292,"MC-200":0.2656,"MC300":0.0,"n":192},{"anio":2023,"KING-GS/DP":0.6806,"MC-200":0.308,"MC300":0.0,"n":263},{"anio":2024,"KING-GS/DP":0.5702,"MC-200":0.4152,"MC300":0.0,"n":342},{"anio":2025,"KING-GS/DP":0.5141,"MC-200":0.3709,"MC300":0.1103,"n":426},{"anio":2026,"KING-GS/DP":0.4413,"MC-200":0.2667,"MC300":0.2698,"n":315}]},"CENTRO":{"kpis":{"contratos_totales":990,"contratos_activos":454,"pct_activos":0.4586,"saldo_activo":28338706.0,"cuota_activa":2414000.0,"pct_mora_contratos":0.2643,"pct_mora_saldo":0.2677,"prima_promedio":21191.0,"pct_prima_gt0":0.7172,"n_productos":1453,"n_credito":1035,"pct_conversion_credito":0.7123,"venta_total":123951102.0},"cosecha":[{"anio":2022,"originados":85,"aun_activos":8,"pct_aun_activos":0.0941,"en_mora":6,"pct_mora":0.75},{"anio":2023,"originados":157,"aun_activos":23,"pct_aun_activos":0.1465,"en_mora":16,"pct_mora":0.6957},{"anio":2024,"originados":225,"aun_activos":77,"pct_aun_activos":0.3422,"en_mora":32,"pct_mora":0.4156},{"anio":2025,"originados":284,"aun_activos":174,"pct_aun_activos":0.6127,"en_mora":40,"pct_mora":0.2299},{"anio":2026,"originados":215,"aun_activos":172,"pct_aun_activos":0.8,"en_mora":26,"pct_mora":0.1512}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.6941,"MC-200":0.3059,"MC300":0.0,"n":85},{"anio":2023,"KING-GS/DP":0.586,"MC-200":0.3885,"MC300":0.0,"n":157},{"anio":2024,"KING-GS/DP":0.56,"MC-200":0.4311,"MC300":0.0,"n":225},{"anio":2025,"KING-GS/DP":0.5528,"MC-200":0.3979,"MC300":0.0352,"n":284},{"anio":2026,"KING-GS/DP":0.4698,"MC-200":0.2605,"MC300":0.2651,"n":215}]},"SUR":{"kpis":{"contratos_totales":786,"contratos_activos":336,"pct_activos":0.4275,"saldo_activo":18497999.0,"cuota_activa":1748148.0,"pct_mora_contratos":0.2768,"pct_mora_saldo":0.26,"prima_promedio":27204.0,"pct_prima_gt0":0.8092,"n_productos":992,"n_credito":808,"pct_conversion_credito":0.8145,"venta_total":87494904.0},"cosecha":[{"anio":2022,"originados":98,"aun_activos":9,"pct_aun_activos":0.0918,"en_mora":7,"pct_mora":0.7778},{"anio":2023,"originados":147,"aun_activos":20,"pct_aun_activos":0.1361,"en_mora":16,"pct_mora":0.8},{"anio":2024,"originados":158,"aun_activos":58,"pct_aun_activos":0.3671,"en_mora":26,"pct_mora":0.4483},{"anio":2025,"originados":205,"aun_activos":127,"pct_aun_activos":0.6195,"en_mora":25,"pct_mora":0.1969},{"anio":2026,"originados":160,"aun_activos":121,"pct_aun_activos":0.7562,"en_mora":19,"pct_mora":0.157}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.7143,"MC-200":0.2857,"MC300":0.0,"n":98},{"anio":2023,"KING-GS/DP":0.7075,"MC-200":0.2789,"MC300":0.0,"n":147},{"anio":2024,"KING-GS/DP":0.5127,"MC-200":0.481,"MC300":0.0,"n":158},{"anio":2025,"KING-GS/DP":0.5854,"MC-200":0.3512,"MC300":0.0634,"n":205},{"anio":2026,"KING-GS/DP":0.4375,"MC-200":0.2938,"MC300":0.2688,"n":160}]},"LITORAL":{"kpis":{"contratos_totales":809,"contratos_activos":330,"pct_activos":0.4079,"saldo_activo":17829373.0,"cuota_activa":1839695.0,"pct_mora_contratos":0.2848,"pct_mora_saldo":0.2637,"prima_promedio":22578.0,"pct_prima_gt0":0.7889,"n_productos":1238,"n_credito":830,"pct_conversion_credito":0.6704,"venta_total":103032938.0},"cosecha":[{"anio":2022,"originados":73,"aun_activos":0,"pct_aun_activos":0.0,"en_mora":0,"pct_mora":0},{"anio":2023,"originados":144,"aun_activos":18,"pct_aun_activos":0.125,"en_mora":13,"pct_mora":0.7222},{"anio":2024,"originados":170,"aun_activos":53,"pct_aun_activos":0.3118,"en_mora":27,"pct_mora":0.5094},{"anio":2025,"originados":241,"aun_activos":138,"pct_aun_activos":0.5726,"en_mora":33,"pct_mora":0.2391},{"anio":2026,"originados":165,"aun_activos":121,"pct_aun_activos":0.7333,"en_mora":21,"pct_mora":0.1736}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.5753,"MC-200":0.4247,"MC300":0.0,"n":73},{"anio":2023,"KING-GS/DP":0.4167,"MC-200":0.5833,"MC300":0.0,"n":144},{"anio":2024,"KING-GS/DP":0.4059,"MC-200":0.5941,"MC300":0.0,"n":170},{"anio":2025,"KING-GS/DP":0.4523,"MC-200":0.4855,"MC300":0.0539,"n":241},{"anio":2026,"KING-GS/DP":0.4,"MC-200":0.2727,"MC300":0.3273,"n":165}]},"OCCIDENTE":{"kpis":{"contratos_totales":503,"contratos_activos":231,"pct_activos":0.4592,"saldo_activo":14581653.0,"cuota_activa":1195025.0,"pct_mora_contratos":0.2987,"pct_mora_saldo":0.3162,"prima_promedio":24459.0,"pct_prima_gt0":0.7416,"n_productos":712,"n_credito":524,"pct_conversion_credito":0.736,"venta_total":61257035.0},"cosecha":[{"anio":2022,"originados":32,"aun_activos":6,"pct_aun_activos":0.1875,"en_mora":4,"pct_mora":0.6667},{"anio":2023,"originados":70,"aun_activos":10,"pct_aun_activos":0.1429,"en_mora":8,"pct_mora":0.8},{"anio":2024,"originados":98,"aun_activos":33,"pct_aun_activos":0.3367,"en_mora":20,"pct_mora":0.6061},{"anio":2025,"originados":166,"aun_activos":82,"pct_aun_activos":0.494,"en_mora":23,"pct_mora":0.2805},{"anio":2026,"originados":137,"aun_activos":100,"pct_aun_activos":0.7299,"en_mora":14,"pct_mora":0.14}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.6875,"MC-200":0.2812,"MC300":0.0,"n":32},{"anio":2023,"KING-GS/DP":0.4,"MC-200":0.5429,"MC300":0.0,"n":70},{"anio":2024,"KING-GS/DP":0.4388,"MC-200":0.5,"MC300":0.0,"n":98},{"anio":2025,"KING-GS/DP":0.5361,"MC-200":0.2831,"MC300":0.1145,"n":166},{"anio":2026,"KING-GS/DP":0.4307,"MC-200":0.1752,"MC300":0.3577,"n":137}]},"ORIENTE":{"kpis":{"contratos_totales":447,"contratos_activos":187,"pct_activos":0.4183,"saldo_activo":9791190.0,"cuota_activa":1015240.0,"pct_mora_contratos":0.2406,"pct_mora_saldo":0.241,"prima_promedio":24525.0,"pct_prima_gt0":0.7785,"n_productos":640,"n_credito":455,"pct_conversion_credito":0.7109,"venta_total":56446791.0},"cosecha":[{"anio":2022,"originados":52,"aun_activos":2,"pct_aun_activos":0.0385,"en_mora":2,"pct_mora":1.0},{"anio":2023,"originados":69,"aun_activos":10,"pct_aun_activos":0.1449,"en_mora":7,"pct_mora":0.7},{"anio":2024,"originados":90,"aun_activos":30,"pct_aun_activos":0.3333,"en_mora":12,"pct_mora":0.4},{"anio":2025,"originados":130,"aun_activos":63,"pct_aun_activos":0.4846,"en_mora":14,"pct_mora":0.2222},{"anio":2026,"originados":101,"aun_activos":82,"pct_aun_activos":0.8119,"en_mora":10,"pct_mora":0.122}],"mix_modelo":[{"anio":2022,"KING-GS/DP":0.7885,"MC-200":0.1923,"MC300":0.0,"n":52},{"anio":2023,"KING-GS/DP":0.5797,"MC-200":0.4058,"MC300":0.0,"n":69},{"anio":2024,"KING-GS/DP":0.5444,"MC-200":0.4444,"MC300":0.0,"n":90},{"anio":2025,"KING-GS/DP":0.5538,"MC-200":0.3385,"MC300":0.0923,"n":130},{"anio":2026,"KING-GS/DP":0.396,"MC-200":0.2673,"MC300":0.3366,"n":101}]}},"ticket_por_modelo":[{"modelo":"KING-GS/DP","n":2565,"cuota_prom":13104.0,"plazo_prom":30.2,"total_comprometido":447204.0,"mediana_comprometido":164531.0,"edad_prom_activos":15.3},{"modelo":"MC-200","n":1784,"cuota_prom":12020.0,"plazo_prom":28.1,"total_comprometido":369699.0,"mediana_comprometido":104820.0,"edad_prom_activos":15.2},{"modelo":"MC300","n":419,"cuota_prom":10720.0,"plazo_prom":23.9,"total_comprometido":270358.0,"mediana_comprometido":103543.0,"edad_prom_activos":5.6}]};
 
   var MES_SERIE = [{"periodo": "2023-01", "contratos": 88}, {"periodo": "2023-02", "contratos": 76}, {"periodo": "2023-03", "contratos": 67}, {"periodo": "2023-04", "contratos": 66}, {"periodo": "2023-05", "contratos": 81}, {"periodo": "2023-06", "contratos": 65}, {"periodo": "2023-07", "contratos": 75}, {"periodo": "2023-08", "contratos": 53}, {"periodo": "2023-09", "contratos": 56}, {"periodo": "2023-10", "contratos": 72}, {"periodo": "2023-11", "contratos": 76}, {"periodo": "2023-12", "contratos": 75}, {"periodo": "2024-01", "contratos": 94}, {"periodo": "2024-02", "contratos": 107}, {"periodo": "2024-03", "contratos": 83}, {"periodo": "2024-04", "contratos": 82}, {"periodo": "2024-05", "contratos": 88}, {"periodo": "2024-06", "contratos": 61}, {"periodo": "2024-07", "contratos": 112}, {"periodo": "2024-08", "contratos": 80}, {"periodo": "2024-09", "contratos": 99}, {"periodo": "2024-10", "contratos": 93}, {"periodo": "2024-11", "contratos": 85}, {"periodo": "2024-12", "contratos": 99}, {"periodo": "2025-01", "contratos": 108}, {"periodo": "2025-02", "contratos": 145}, {"periodo": "2025-03", "contratos": 131}, {"periodo": "2025-04", "contratos": 134}, {"periodo": "2025-05", "contratos": 143}, {"periodo": "2025-06", "contratos": 122}, {"periodo": "2025-07", "contratos": 106}, {"periodo": "2025-08", "contratos": 122}, {"periodo": "2025-09", "contratos": 97}, {"periodo": "2025-10", "contratos": 122}, {"periodo": "2025-11", "contratos": 112}, {"periodo": "2025-12", "contratos": 110}, {"periodo": "2026-01", "contratos": 149}, {"periodo": "2026-02", "contratos": 131}, {"periodo": "2026-03", "contratos": 176}, {"periodo": "2026-04", "contratos": 141}, {"periodo": "2026-05", "contratos": 153}, {"periodo": "2026-06", "contratos": 142}, {"periodo": "2026-07", "contratos": 98}, {"periodo": "2026-08", "contratos": 103}];
 
   var VOLUMEN = {"TODAS":[{"anio":2021,"originados":108},{"anio":2022,"originados":532},{"anio":2023,"originados":850},{"anio":2024,"originados":1083},{"anio":2025,"originados":1452},{"anio":2026,"originados":1093}],"NORTE":[{"anio":2021,"originados":44},{"anio":2022,"originados":192},{"anio":2023,"originados":263},{"anio":2024,"originados":342},{"anio":2025,"originados":426},{"anio":2026,"originados":315}],"CENTRO":[{"anio":2021,"originados":24},{"anio":2022,"originados":85},{"anio":2023,"originados":157},{"anio":2024,"originados":225},{"anio":2025,"originados":284},{"anio":2026,"originados":215}],"SUR":[{"anio":2021,"originados":18},{"anio":2022,"originados":98},{"anio":2023,"originados":147},{"anio":2024,"originados":158},{"anio":2025,"originados":205},{"anio":2026,"originados":160}],"LITORAL":[{"anio":2021,"originados":17},{"anio":2022,"originados":73},{"anio":2023,"originados":144},{"anio":2024,"originados":170},{"anio":2025,"originados":241},{"anio":2026,"originados":165}],"OCCIDENTE":[{"anio":2021,"originados":0},{"anio":2022,"originados":32},{"anio":2023,"originados":70},{"anio":2024,"originados":98},{"anio":2025,"originados":166},{"anio":2026,"originados":137}],"ORIENTE":[{"anio":2021,"originados":5},{"anio":2022,"originados":52},{"anio":2023,"originados":69},{"anio":2024,"originados":90},{"anio":2025,"originados":130},{"anio":2026,"originados":101}]};
+  var CONVYR = {"TODAS":[{"anio":2021,"n_productos":185,"n_credito":113,"pct_conversion":0.6108,"venta_total":12964197.5,"venta_credito":8685620.7},{"anio":2022,"n_productos":772,"n_credito":555,"pct_conversion":0.7189,"venta_total":71938314.3,"venta_credito":51720952.5},{"anio":2023,"n_productos":1167,"n_credito":877,"pct_conversion":0.7515,"venta_total":104641909.0,"venta_credito":79749202.6},{"anio":2024,"n_productos":1443,"n_credito":1116,"pct_conversion":0.7734,"venta_total":122154999.2,"venta_credito":95324190.5},{"anio":2025,"n_productos":2004,"n_credito":1505,"pct_conversion":0.751,"venta_total":169339960.4,"venta_credito":127678601.0},{"anio":2026,"n_productos":1644,"n_credito":1140,"pct_conversion":0.6934,"venta_total":141174891.8,"venta_credito":98049645.0}],"NORTE":[{"anio":2021,"n_productos":66,"n_credito":45,"pct_conversion":0.6818,"venta_total":5199248.1,"venta_credito":3550563.6},{"anio":2022,"n_productos":288,"n_credito":201,"pct_conversion":0.6979,"venta_total":26838541.4,"venta_credito":18915343.1},{"anio":2023,"n_productos":352,"n_credito":273,"pct_conversion":0.7756,"venta_total":32472326.8,"venta_credito":25573654.1},{"anio":2024,"n_productos":444,"n_credito":358,"pct_conversion":0.8063,"venta_total":38587322.6,"venta_credito":31498476.5},{"anio":2025,"n_productos":580,"n_credito":444,"pct_conversion":0.7655,"venta_total":48484790.2,"venta_credito":37421646.6},{"anio":2026,"n_productos":450,"n_credito":333,"pct_conversion":0.74,"venta_total":38449273.2,"venta_credito":28691780.2}],"CENTRO":[{"anio":2021,"n_productos":67,"n_credito":26,"pct_conversion":0.3881,"venta_total":3630447.7,"venta_credito":1859727.0},{"anio":2022,"n_productos":128,"n_credito":94,"pct_conversion":0.7344,"venta_total":11779934.6,"venta_credito":8532598.1},{"anio":2023,"n_productos":226,"n_credito":161,"pct_conversion":0.7124,"venta_total":20372061.9,"venta_credito":14773099.8},{"anio":2024,"n_productos":321,"n_credito":234,"pct_conversion":0.729,"venta_total":27673024.7,"venta_credito":20349937.7},{"anio":2025,"n_productos":402,"n_credito":296,"pct_conversion":0.7363,"venta_total":33680977.8,"venta_credito":25109009.0},{"anio":2026,"n_productos":309,"n_credito":224,"pct_conversion":0.7249,"venta_total":26814654.9,"venta_credito":19377711.4}],"LITORAL":[{"anio":2021,"n_productos":20,"n_credito":17,"pct_conversion":0.85,"venta_total":1449600.3,"venta_credito":1233587.6},{"anio":2022,"n_productos":122,"n_credito":74,"pct_conversion":0.6066,"venta_total":10842198.2,"venta_credito":6463260.5},{"anio":2023,"n_productos":212,"n_credito":151,"pct_conversion":0.7123,"venta_total":17403299.2,"venta_credito":12542174.1},{"anio":2024,"n_productos":252,"n_credito":172,"pct_conversion":0.6825,"venta_total":20033853.8,"venta_credito":13631886.2},{"anio":2025,"n_productos":366,"n_credito":246,"pct_conversion":0.6721,"venta_total":30405673.8,"venta_credito":20032309.3},{"anio":2026,"n_productos":266,"n_credito":170,"pct_conversion":0.6391,"venta_total":22898312.3,"venta_credito":14459135.8}],"SUR":[{"anio":2021,"n_productos":22,"n_credito":20,"pct_conversion":0.9091,"venta_total":1739160.9,"venta_credito":1562907.6},{"anio":2022,"n_productos":116,"n_credito":101,"pct_conversion":0.8707,"venta_total":11029716.4,"venta_credito":9511260.9},{"anio":2023,"n_productos":186,"n_credito":150,"pct_conversion":0.8065,"venta_total":17744910.8,"venta_credito":14432825.4},{"anio":2024,"n_productos":189,"n_credito":159,"pct_conversion":0.8413,"venta_total":15799169.9,"venta_credito":13470883.5},{"anio":2025,"n_productos":253,"n_credito":210,"pct_conversion":0.83,"venta_total":21928123.1,"venta_credito":18198716.3},{"anio":2026,"n_productos":226,"n_credito":168,"pct_conversion":0.7434,"venta_total":19253823.2,"venta_credito":14341527.5}],"OCCIDENTE":[{"anio":2021,"n_productos":1,"n_credito":0,"pct_conversion":0.0,"venta_total":87909.0,"venta_credito":0.0},{"anio":2022,"n_productos":52,"n_credito":32,"pct_conversion":0.6154,"venta_total":4970154.5,"venta_credito":3036323.6},{"anio":2023,"n_productos":99,"n_credito":72,"pct_conversion":0.7273,"venta_total":8452326.3,"venta_credito":6098631.0},{"anio":2024,"n_productos":119,"n_credito":101,"pct_conversion":0.8487,"venta_total":9780250.4,"venta_credito":8381829.3},{"anio":2025,"n_productos":221,"n_credito":177,"pct_conversion":0.8009,"venta_total":18967902.8,"venta_credito":15449030.1},{"anio":2026,"n_productos":220,"n_credito":142,"pct_conversion":0.6455,"venta_total":18998492.2,"venta_credito":12427850.2}],"ORIENTE":[{"anio":2021,"n_productos":9,"n_credito":5,"pct_conversion":0.5556,"venta_total":857831.5,"venta_credito":478834.8},{"anio":2022,"n_productos":66,"n_credito":53,"pct_conversion":0.803,"venta_total":6477769.1,"venta_credito":5262166.5},{"anio":2023,"n_productos":92,"n_credito":70,"pct_conversion":0.7609,"venta_total":8196984.0,"venta_credito":6328818.2},{"anio":2024,"n_productos":118,"n_credito":92,"pct_conversion":0.7797,"venta_total":10281377.6,"venta_credito":7991177.3},{"anio":2025,"n_productos":182,"n_credito":132,"pct_conversion":0.7253,"venta_total":15872492.7,"venta_credito":11467889.7},{"anio":2026,"n_productos":173,"n_credito":103,"pct_conversion":0.5954,"venta_total":14760336.0,"venta_credito":8751639.8}]};
 
   var MODEL_COLOR = {
     "KING-GS/DP": "var(--accent)",
@@ -638,6 +679,11 @@
     if (n >= 1000000) return "L." + (n/1000000).toFixed(2) + "M";
     if (n >= 1000) return "L." + (n/1000).toFixed(0) + "k";
     return "L." + Math.round(n);
+  }
+  function fmtLaxis(n){
+    if (n >= 1000000) return (n/1000000).toFixed(0) + "M";
+    if (n >= 1000) return (n/1000).toFixed(0) + "k";
+    return "L.0";
   }
   function fmtPct(x, d){
     d = d===undefined ? 1 : d;
@@ -694,7 +740,7 @@
     var r = document.getElementById("riskZoneStat");
     if (zona === "TODAS"){
       g.innerHTML = 'A nivel cartera: NORTE pasó de <b>40.7%</b> (2021) a <b>28.8%</b> (2026) del mix geográfico.';
-      r.innerHTML = 'Cosechas 2022–2023: <b>79.6%</b> y <b>69.8%</b> de mora entre los contratos aún activos.';
+      r.innerHTML = 'Cosechas 2022–2023: <b>79.5%</b> y <b>69.8%</b> de mora entre los contratos aún activos.';
     } else {
       var mm = DATA.data[zona].mix_modelo;
       var first = mm[0], last = mm[mm.length-1];
@@ -921,6 +967,148 @@
     ttVol.style.opacity = 1;
   }
 
+  // ---------------- conversión a crédito por año (línea única) ----------------
+  var chartConv = document.getElementById("chartConv");
+  var ttConv = document.getElementById("ttConv");
+  var holderConv = document.getElementById("chartConvHolder");
+
+  function renderConvChart(rows){
+    chartConv.innerHTML = "";
+    var W = 480, H = 220;
+    var padL = 34, padR = 14, padT = 18, padB = 28;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = rows.length;
+    var slot = plotW / n;
+
+    function yFor(pct){ return padT + plotH * (1 - pct); }
+
+    [0,0.25,0.5,0.75,1].forEach(function(g){
+      var y = yFor(g);
+      chartConv.appendChild(el("line", {x1:padL, x2:W-padR, y1:y, y2:y, class:"grid-line"}));
+      var t = el("text", {x: padL - 6, y: y+3, class:"axis-label", "text-anchor":"end"});
+      t.textContent = Math.round(g*100) + "%";
+      chartConv.appendChild(t);
+    });
+
+    var points = rows.map(function(r, i){
+      var cx = padL + slot*i + slot/2;
+      return {x:cx, y:yFor(r.pct_conversion), row:r};
+    });
+
+    rows.forEach(function(r, i){
+      var cx = padL + slot*i + slot/2;
+      var yl = el("text", {x:cx, y: padT+plotH+18, class:"cat-year", "text-anchor":"middle"});
+      yl.textContent = r.anio + (r.anio === 2026 ? "*" : "");
+      chartConv.appendChild(yl);
+    });
+
+    var hoverLine = el("line", {x1:0, x2:0, y1:padT, y2:padT+plotH, class:"hoverline"});
+    chartConv.appendChild(hoverLine);
+
+    var d = points.map(function(p,i){ return (i===0?"M":"L") + p.x.toFixed(1) + "," + p.y.toFixed(1); }).join(" ");
+    chartConv.appendChild(el("path", {d:d, class:"conv-line"}));
+
+    points.forEach(function(p){
+      chartConv.appendChild(el("circle", {cx:p.x, cy:p.y, r:4.5, class:"conv-dot"}));
+      var lbl = el("text", {x:p.x, y:p.y - 10, class:"conv-val", "text-anchor":"middle"});
+      lbl.textContent = fmtPct(p.row.pct_conversion, 0);
+      chartConv.appendChild(lbl);
+    });
+
+    points.forEach(function(p, i){
+      var hit = el("rect", {x: padL + slot*i, y: padT, width: slot, height: plotH, fill:"transparent", style:"cursor:pointer"});
+      hit.addEventListener("mousemove", function(evt){ showTooltipConv(evt, p); });
+      hit.addEventListener("mouseenter", function(evt){
+        hoverLine.setAttribute("x1", p.x); hoverLine.setAttribute("x2", p.x); hoverLine.style.opacity = 1;
+        showTooltipConv(evt, p);
+      });
+      hit.addEventListener("mouseleave", function(){ hoverLine.style.opacity = 0; ttConv.style.opacity = 0; });
+      chartConv.appendChild(hit);
+    });
+  }
+
+  function showTooltipConv(evt, p){
+    var r = p.row;
+    var isPartial = r.anio === 2026;
+    ttConv.innerHTML =
+      "<b>" + r.anio + "</b>" + (isPartial ? " (parcial, a ago-2026)" : "") + "<br>" +
+      fmtN(r.n_credito) + " de " + fmtN(r.n_productos) + " productos a crédito<br>" +
+      "<b>" + fmtPct(r.pct_conversion,1) + "</b> de conversión";
+    var box = holderConv.getBoundingClientRect();
+    ttConv.style.left = (evt.clientX - box.left) + "px";
+    ttConv.style.top = (evt.clientY - box.top - 14) + "px";
+    ttConv.style.opacity = 1;
+  }
+
+  // ---------------- venta total vs. venta a crédito por año (dos líneas) ----------------
+  var chartVenta = document.getElementById("chartVenta");
+  var ttVenta = document.getElementById("ttVenta");
+  var holderVenta = document.getElementById("chartVentaHolder");
+
+  function renderVentaChart(rows){
+    chartVenta.innerHTML = "";
+    var W = 480, H = 220;
+    var padL = 40, padR = 14, padT = 18, padB = 28;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = rows.length;
+    var slot = plotW / n;
+    var maxV = Math.max.apply(null, rows.map(function(r){ return r.venta_total; })) * 1.15;
+
+    function yFor(v){ return padT + plotH * (1 - v/maxV); }
+
+    [0,0.25,0.5,0.75,1].forEach(function(g){
+      var y = padT + plotH * (1-g);
+      chartVenta.appendChild(el("line", {x1:padL, x2:W-padR, y1:y, y2:y, class:"grid-line"}));
+      var t = el("text", {x: padL - 6, y: y+3, class:"axis-label", "text-anchor":"end"});
+      t.textContent = g === 0 ? "L.0" : fmtLaxis(maxV*g);
+      chartVenta.appendChild(t);
+    });
+
+    var ptsTotal = rows.map(function(r, i){ return {x: padL + slot*i + slot/2, y: yFor(r.venta_total), row:r}; });
+    var ptsCredito = rows.map(function(r, i){ return {x: padL + slot*i + slot/2, y: yFor(r.venta_credito), row:r}; });
+
+    rows.forEach(function(r, i){
+      var cx = padL + slot*i + slot/2;
+      var yl = el("text", {x:cx, y: padT+plotH+18, class:"cat-year", "text-anchor":"middle"});
+      yl.textContent = r.anio + (r.anio === 2026 ? "*" : "");
+      chartVenta.appendChild(yl);
+    });
+
+    var hoverLine = el("line", {x1:0, x2:0, y1:padT, y2:padT+plotH, class:"hoverline"});
+    chartVenta.appendChild(hoverLine);
+
+    var dTotal = ptsTotal.map(function(p,i){ return (i===0?"M":"L") + p.x.toFixed(1) + "," + p.y.toFixed(1); }).join(" ");
+    chartVenta.appendChild(el("path", {d:dTotal, class:"venta-total-line"}));
+    var dCredito = ptsCredito.map(function(p,i){ return (i===0?"M":"L") + p.x.toFixed(1) + "," + p.y.toFixed(1); }).join(" ");
+    chartVenta.appendChild(el("path", {d:dCredito, class:"venta-credito-line"}));
+
+    ptsTotal.forEach(function(p){ chartVenta.appendChild(el("circle", {cx:p.x, cy:p.y, r:4, class:"venta-total-dot"})); });
+    ptsCredito.forEach(function(p){ chartVenta.appendChild(el("circle", {cx:p.x, cy:p.y, r:4, class:"venta-credito-dot"})); });
+
+    ptsTotal.forEach(function(p, i){
+      var hit = el("rect", {x: padL + slot*i, y: padT, width: slot, height: plotH, fill:"transparent", style:"cursor:pointer"});
+      hit.addEventListener("mousemove", function(evt){ showTooltipVenta(evt, p.row); });
+      hit.addEventListener("mouseenter", function(evt){
+        hoverLine.setAttribute("x1", p.x); hoverLine.setAttribute("x2", p.x); hoverLine.style.opacity = 1;
+        showTooltipVenta(evt, p.row);
+      });
+      hit.addEventListener("mouseleave", function(){ hoverLine.style.opacity = 0; ttVenta.style.opacity = 0; });
+      chartVenta.appendChild(hit);
+    });
+  }
+
+  function showTooltipVenta(evt, r){
+    var isPartial = r.anio === 2026;
+    ttVenta.innerHTML =
+      "<b>" + r.anio + "</b>" + (isPartial ? " (parcial, a ago-2026)" : "") + "<br>" +
+      "Venta total: <b>" + fmtL(r.venta_total) + "</b><br>" +
+      "Venta a crédito: <b>" + fmtL(r.venta_credito) + "</b> (" + fmtPct(r.venta_credito/r.venta_total,0) + ")";
+    var box = holderVenta.getBoundingClientRect();
+    ttVenta.style.left = (evt.clientX - box.left) + "px";
+    ttVenta.style.top = (evt.clientY - box.top - 14) + "px";
+    ttVenta.style.opacity = 1;
+  }
+
   // ---------------- estacionalidad mensual (44 meses, ene-2023 a ago-2026) ----------------
   var MES_NOMBRES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
   var chartMes = document.getElementById("chartMes");
@@ -1015,6 +1203,8 @@
     renderCosechaChart(zd.cosecha);
     renderMixChart(zd.mix_modelo);
     renderVolChart(VOLUMEN[state.zona]);
+    renderConvChart(CONVYR[state.zona]);
+    renderVentaChart(CONVYR[state.zona]);
     renderMesChart(MES_SERIE);
   }
 
@@ -1024,6 +1214,7 @@
   window.addEventListener("resize", render);
 })();
 </script>
+
 
 </body>
 </html>
