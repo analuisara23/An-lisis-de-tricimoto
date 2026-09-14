@@ -508,8 +508,7 @@
             <tr><td>Al día (0 días)</td><td>1,593</td><td><b style="color:var(--good)">70.7%</b></td></tr>
             <tr><td>1–30 días</td><td>272</td><td>12.1%</td></tr>
             <tr><td>31–60 días</td><td>119</td><td>5.3%</td></tr>
-            <tr><td>61–90 días</td><td>66</td><td>2.9%</td></tr>
-            <tr><td>90+ días</td><td>202</td><td><b style="color:var(--risk)">9.0%</b></td></tr>
+            <tr><td>60+ días</td><td>268</td><td><b style="color:var(--risk)">11.9%</b></td></tr>
           </tbody>
         </table>
 
@@ -525,7 +524,7 @@
         <div class="ind-note">"Otros" (GKS225, APE-*, 14 contratos activos) no se muestra por tamaño de muestra muy chico.</div>
       </div>
       <div class="ticket-callout" style="margin-top:14px;">
-        <b>Dos lecturas del mismo problema:</b> casi 1 de cada 3 contratos activos (29.3%) tiene algo de mora, pero el grupo de 90+ días (202 contratos, 9.0% de activos) es casi tan grande como los tres rangos más cortos juntos (1–90 días: 457 contratos, 20.3%) — no es solo atraso reciente, hay un bloque de mora ya crónica. Ese saldo en mora representa L.39.8M de los L.133.8M de saldo activo total (~29.7%). MC-200 tiene la tasa de mora más alta entre los tres modelos principales (34.6%) y MC300 la más baja (19.2%) — aunque MC300 es también el modelo más nuevo (antigüedad promedio ~5.6 meses vs. ~15 en los otros dos), así que parte de esa diferencia puede ser por edad de cartera y no por el modelo en sí; vale la pena volver a mirar esto cuando MC300 tenga más historia.
+        <b>Dos lecturas del mismo problema:</b> casi 1 de cada 3 contratos activos (29.3%) tiene algo de mora, y el bloque de 60+ días (268 contratos, 11.9% de activos) ya representa el 40.7% de toda esa mora — no es solo atraso reciente, hay un bloque de mora ya crónica. Ese saldo en mora representa L.39.8M de los L.133.8M de saldo activo total (~29.7%). MC-200 tiene la tasa de mora más alta entre los tres modelos principales (34.6%) y MC300 la más baja (19.2%) — aunque MC300 es también el modelo más nuevo (antigüedad promedio ~5.6 meses vs. ~15 en los otros dos), así que parte de esa diferencia puede ser por edad de cartera y no por el modelo en sí; vale la pena volver a mirar esto cuando MC300 tenga más historia.
       </div>
     </section>
 
@@ -666,8 +665,8 @@
     </section>
 
     <footer>
-      <div>Fuente y metodología:  Fuente de Limpieza de datos VF.Cobertura ene-2021–ago-2026; 2026 es un año parcial. Alcance 100% interno, sin comparación con competencia.</div>
-      <div class="fname">Preparado por Análisis de Estrategia de Negocios — Comercial y Mercado · 31 de agosto de 2026, actualizado 3 de septiembre de 2026</div>
+      <div>Fuente y metodología: cifras calculadas sobre la hoja "Datos_Limpios" de Limpieza de datos VF (7,215 filas depuradas; 5,117 contratos con datos de crédito completos — Flag crédito=1 y match en FactContratosSAP — son la base de este diagnóstico; se excluyen 1,909 líneas sin flag de crédito y 188 líneas marcadas como crédito pero sin match, que el archivo fuente reporta como pendientes con el analista BI). El análisis por cosecha usa "Año" = año de la columna "fecha" (originación del contrato); vista desde 2022 (2021 excluido por muy bajo volumen). Ticket por modelo usa solo el canal Tienda (2,565–1,784–419 contratos según modelo); Franquicia y Outlet se muestran aparte porque Franquicia mezcla ventas de contado y financiadas con montos muy distintos entre sí, no comparables como grupo único. Cobertura ene-2021–ago-2026; 2026 es un año parcial. Alcance 100% interno, sin comparación con competencia.</div>
+      <div class="fname">Preparado por Análisis de Estrategia de Negocios — Comercial y Mercado · 31 de agosto de 2026, actualizado 1 de septiembre de 2026</div>
     </footer>
 
   </main>
