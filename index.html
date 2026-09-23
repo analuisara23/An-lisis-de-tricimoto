@@ -525,8 +525,8 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Mix de Categoría por cosecha</h3>
-            <div class="phint">% de contratos originados cada año, por Categoría comercial (agrupada). TVS King (GS/DP) se mantiene como línea estable pero decreciente; Genesis MC300 es el modelo más reciente y viene ganando terreno con fuerza.</div>
+            <h3>Mix de Modelo por cosecha</h3>
+            <div class="phint">% de contratos originados cada año, por Modelo comercial (agrupado). TVS King (GS/DP) se mantiene como línea estable pero decreciente; Genesis MC300 es el modelo más reciente y viene ganando terreno con fuerza.</div>
           </div>
         </div>
         <div class="chart-holder" id="chartMixHolder">
@@ -539,11 +539,11 @@
 
     <section>
       <div class="section-head">
-        <h2>Clasificación de motos financiadas y mora por categoría</h2>
+        <h2>Clasificación de motos financiadas y mora por modelo</h2>
         <div class="section-note">Corte extra solicitado, donde se encuentra el detalle de clasificación y modelo.</div>
       </div>
       <div class="ticket-panel">
-        <h3 style="font-size:13.5px;font-weight:700;color:var(--ink);margin:0 0 4px;">Mora por rango de días, por Categoría y por Clasificación</h3>
+        <h3 style="font-size:13.5px;font-weight:700;color:var(--ink);margin:0 0 4px;">Mora por rango de días, por Modelo y por Clasificación</h3>
         <div class="section-note" style="max-width:680px;margin-bottom:12px;">Siendo la barra superior la cartera total vigente.</div>
 
         <div class="stackbar-row stackbar-overall">
@@ -554,14 +554,14 @@
 
         <div class="chart-filter" style="margin:14px 0 10px;">
           <span class="flabel-light">Ver por</span>
-          <div class="segmented-light" id="moraViewToggle" role="group" aria-label="Ver mora por categoría o clasificación"></div>
+          <div class="segmented-light" id="moraViewToggle" role="group" aria-label="Ver mora por modelo o clasificación"></div>
         </div>
         <div id="moraGroupBars"></div>
         <div class="legend" id="moraLegend"></div>
         <div class="ind-note" id="moraTableNote"></div>
 
         <div class="ticket-callout" style="margin-top:14px;">
-          <b>La mora crónica (60+ días) pesa más de lo que sugiere el promedio:</b> más de 1 de cada 3 contratos activos (36.8%) tiene algo de mora, y el bloque de 60+ días (293 contratos, 13.3% de activos) ya representa el 36.2% de toda esa mora — no es solo atraso reciente. Por Categoría, Genesis MC-200 es el que más concentra mora total (42.1%) y Genesis MC300 el que menos (27.4%); por Clasificación, Genesis MC300 queda diluido dentro de "Moto Cargo" junto con Genesis MC-200, que es la clasificación de mayor mora (38.1% vs. 35.9% de Tricimoto Pasajero).
+          <b>La mora crónica (60+ días) pesa más de lo que sugiere el promedio:</b> más de 1 de cada 3 contratos activos (36.8%) tiene algo de mora, y el bloque de 60+ días (293 contratos, 13.3% de activos) ya representa el 36.2% de toda esa mora — no es solo atraso reciente. Por Modelo, Genesis MC-200 es el que más concentra mora total (42.1%) y Genesis MC300 el que menos (27.4%); por Clasificación, Genesis MC300 queda diluido dentro de "Moto Cargo" junto con Genesis MC-200, que es la clasificación de mayor mora (38.1% vs. 35.9% de Tricimoto Pasajero).
         </div>
       </div>
     </section>
@@ -638,8 +638,8 @@
       <div class="ticket-panel">
         <div class="ticket-top">
           <div>
-            <h3>Ticket por categoría: cuánto vale en promedio lo financiado</h3>
-            <div class="section-note chart-caption">Venta financiada promedio por Categoría, sobre el universo de 5,009 contratos de crédito emparejados. Use los filtros de Canal y Clasificación para no mezclar universos de composición distinta.</div>
+            <h3>Ticket por Modelo: cuánto vale en promedio lo financiado</h3>
+            <div class="section-note chart-caption">Venta financiada promedio por Modelo, sobre el universo de 5,009 contratos de crédito emparejados. Use los filtros de Canal y Clasificación para no mezclar universos de composición distinta.</div>
           </div>
         </div>
         <div class="chart-filter" style="grid-column:1 / -1;">
@@ -800,7 +800,7 @@
           <tbody>
             <tr><td>Mora por cosecha activa</td><td>El más importante de todos: si las cosechas 2025-2026 empiezan a repetir la trayectoria de mora de 2022-2023 al llegar a su misma edad.</td><td>¿Las cosechas nuevas están empezando a repetir, a la misma edad, la mora que tuvieron las cosechas 2022-2023?</td></tr>
             <tr><td>Contratos originados en el mes</td><td>Ritmo de crecimiento real frente al promedio de los últimos 3 meses — sostiene la narrativa de expansión.</td><td>¿Seguimos creciendo al mismo ritmo, o el crecimiento se está frenando?</td></tr>
-            <tr><td>Mix de Categoría del mes</td><td>Participación de Genesis MC300 frente a TVS King (GS/DP) y Genesis MC-200 — MC300 es la categoría que más terreno está ganando mes a mes.</td><td>¿MC300 sigue ganando terreno sobre TVS King (GS/DP) y MC-200, o ya se estabilizó?</td></tr>
+            <tr><td>Mix de Modelo del mes</td><td>Participación de Genesis MC300 frente a TVS King (GS/DP) y Genesis MC-200 — MC300 es el modelo que más terreno está ganando mes a mes.</td><td>¿MC300 sigue ganando terreno sobre TVS King (GS/DP) y MC-200, o ya se estabilizó?</td></tr>
             <tr><td>% de contratos con prima &gt; 0</td><td>Una baja sostenida desde 75.4% es la señal más directa de relajación de condiciones de originación. La política de prima no explica por sí sola la mora por modelo (ver Prima por Rango) — monitorear igual la tendencia global.</td><td>¿Estamos pidiendo menos prima al mismo tipo de cliente, o el cambio se explica por la mezcla de modelos?</td></tr>
             <tr><td>Concentración Top-10 tiendas</td><td>Si la dependencia de canal (hoy 28.1% del volumen) crece o se diluye.</td><td>¿Qué tan dependiente es el negocio de un grupo chico de tiendas?</td></tr>
             <tr><td>% de clientes recurrentes del mes</td><td>Tendencia frente a la base actual de 14.8% de los contratos — valida si la fidelización avanza.</td><td>¿La fidelización está funcionando — crece la proporción de contratos de clientes que repiten?</td></tr>
@@ -1542,7 +1542,7 @@
       var bottom = rows.slice().sort(function(a,b){ return a.venta_financiada_prom - b.venta_financiada_prom; })[0];
       var scopeTxt = (ticketState.canal === "TODAS" ? "todos los canales" : "canal " + ticketState.canal) +
         (ticketState.clasif === "TODAS" ? "" : ", clasificación " + ticketState.clasif);
-      callout.innerHTML = "En esta vista (" + scopeTxt + ", " + rows.length + " categorías con datos): <b>" + top.categoria + "</b> tiene el mayor ticket financiado promedio (" + fmtL(top.venta_financiada_prom) + "), frente a " + fmtL(bottom.venta_financiada_prom) + " de " + bottom.categoria + ".";
+      callout.innerHTML = "En esta vista (" + scopeTxt + ", " + rows.length + " modelos con datos): <b>" + top.categoria + "</b> tiene el mayor ticket financiado promedio (" + fmtL(top.venta_financiada_prom) + "), frente a " + fmtL(bottom.venta_financiada_prom) + " de " + bottom.categoria + ".";
     }
   }
 
@@ -1628,7 +1628,7 @@
   }
   var moraViewToggleEl = document.getElementById('moraViewToggle');
   if (moraViewToggleEl){
-    [{key:"categoria", label:"Categoría"}, {key:"clasificacion", label:"Clasificación"}].forEach(function(opt){
+    [{key:"categoria", label:"Modelo"}, {key:"clasificacion", label:"Clasificación"}].forEach(function(opt){
       var btn = document.createElement('button');
       btn.className = 'seg-btn-light';
       btn.type = 'button';
